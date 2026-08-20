@@ -1,0 +1,36 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Large raw datasets & artifacts (optional, keep data/flight_pricing_dataset.csv tracked if needed)
+*.log
+
+# Trained ML model (large binary)
+models/price_model.joblib
+
+# Antigravity development helper scripts
+gen_app.py
+gen_p1.py
+gen_p2.py
+gen_p3.py
+generate_backend.py
+generate_components.py
+maker.py
+patch_train.py
+test.txt
