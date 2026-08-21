@@ -25,9 +25,10 @@ from app.pages.forecast import render_forecast_page
 from app.pages.recommendations import render_recommendations_page
 from app.pages.about import render_about_page
 
-# Core Data Preprocessing
+# Core Data Preprocessing & Modeling
 from src.preprocessing import clean_flight_dataframe
 from src.feature_engineering import build_engineered_features
+from src.model import train_and_evaluate_models
 
 # Set Page Config
 st.set_page_config(
@@ -58,21 +59,34 @@ def load_datasets():
     return df_raw, df_engineered
 
 @st.cache_resource(show_spinner=False)
-def load_model_artifacts():
+def load_model_artifacts(df_engineered):
     """
     Load trained model pipeline and evaluation metrics with Streamlit caching.
+    Auto-trains and persists if artifacts do not exist on the target deployment environment.
     """
     model_path = 'models/price_model.joblib'
     metrics_path = 'models/metrics.json'
 
     if not os.path.exists(model_path) or not os.path.exists(metrics_path):
-        return None, {}
+        pipeline, metrics = train_and_evaluate_models(df_engineered)
+        os.makedirs('models', exist_ok=True)
+        joblib.dump(pipeline, model_path)
+        with open(metrics_path, 'w', encoding='utf-8') as f:
+            json.dump(metrics, f, indent=2)
+        return pipeline, metrics
 
-    pipeline = joblib.load(model_path)
-    with open(metrics_path, 'r', encoding='utf-8') as f:
-        metrics = json.load(f)
-
-    return pipeline, metrics
+    try:
+        pipeline = joblib.load(model_path)
+        with open(metrics_path, 'r', encoding='utf-8') as f:
+            metrics = json.load(f)
+        return pipeline, metrics
+    except Exception:
+        pipeline, metrics = train_and_evaluate_models(df_engineered)
+        os.makedirs('models', exist_ok=True)
+        joblib.dump(pipeline, model_path)
+        with open(metrics_path, 'w', encoding='utf-8') as f:
+            json.dump(metrics, f, indent=2)
+        return pipeline, metrics
 
 # --- Master Application Flow ---
 
@@ -95,7 +109,7 @@ def main():
 
     # Load Data & Model
     df_raw, df = load_datasets()
-    model_pipeline, metrics = load_model_artifacts()
+    model_pipeline, metrics = load_model_artifacts(df)
 
     # Step 1: Landing Page
     if not st.session_state['has_searched']:
