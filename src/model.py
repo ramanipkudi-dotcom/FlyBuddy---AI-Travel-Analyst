@@ -1,10 +1,10 @@
 """
 FlyBuddy - Machine Learning Model Module
 ----------------------------------------
-Builds Scikit-learn Pipelines, trains baseline and candidate models,
+Builds Scikit-learn Pipelines, trains baseline and alternative regression models,
 computes evaluation metrics, and handles price inference.
 
-Why this matters for interviews:
+Model Design Architecture:
 - Baseline (Ridge) provides a simple, interpretable linear benchmark.
 - Random Forest captures non-linear interactions (e.g. route + class + booking lead time).
 - Preprocessing (Imputation & One-Hot Encoding) is encapsulated in a Pipeline

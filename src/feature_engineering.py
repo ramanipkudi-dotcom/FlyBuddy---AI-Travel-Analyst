@@ -3,7 +3,7 @@ FlyBuddy - Feature Engineering Module
 -------------------------------------
 Transforms cleaned tabular data into machine-learning ready predictive features.
 
-Why this matters for interviews:
+Feature Engineering Rationale:
 - Creates domain-relevant indicators (e.g. Route, Time of Day, Weekend flag).
 - Ensures no target leakage occurs.
 """

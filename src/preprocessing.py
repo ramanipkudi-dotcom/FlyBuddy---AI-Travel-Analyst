@@ -4,7 +4,7 @@ FlyBuddy - Data Preprocessing Module
 Handles all data cleaning, type conversions, and standardizations
 for the raw flight pricing dataset.
 
-Why this matters for interviews:
+Data Processing Rationale:
 - Real-world flight data contains inconsistencies (e.g. mixed duration formats,
   string numbers, different airport codes/names, and missing values).
 - We use deterministic, explainable rules to clean and standardize each column

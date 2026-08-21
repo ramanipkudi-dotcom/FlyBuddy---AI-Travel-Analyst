@@ -3,10 +3,6 @@ FlyBuddy - Explainable Flight Recommendation Module
 ---------------------------------------------------
 Ranks historical flight options based on user priorities (Cheapest, Fastest,
 Fewest Stops, Best Value) and provides transparent reason chips.
-
-Why this matters for interviews:
-- Avoids black-box recommendation scores by attaching clear, rule-based explanations
-  (e.g. 'Non-stop', 'Lowest Fare on Route', 'Below Route Average').
 """
 
 import pandas as pd
