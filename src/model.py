@@ -11,7 +11,9 @@ Model Design Architecture:
   to prevent data leakage between train and test splits.
 """
 
+import os
 import time
+import joblib
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -172,17 +174,40 @@ def train_and_evaluate_models(df):
 def predict_flight_price(pipeline, flight_dict, historical_route_median=None):
     """
     Generate price prediction and contextual comparison for a single flight query.
+    Ensures absolute schema matching and robust fallback if pipeline is not yet initialized.
     """
+    if pipeline is None:
+        if os.path.exists('models/price_model.joblib'):
+            pipeline = joblib.load('models/price_model.joblib')
+        else:
+            dist = float(flight_dict.get('Distance_km_numeric', 1000.0) or 1000.0)
+            cls = str(flight_dict.get('Travel_Class', 'Economy'))
+            mult = 1.0 if cls == 'Economy' else (1.5 if cls == 'Premium Economy' else (2.8 if cls == 'Business' else 4.0))
+            return {
+                'predicted_price': round(dist * 4.5 * mult, 2),
+                'price_status': 'Estimated Market Rate',
+                'badge_type': 'typical'
+            }
+
     input_df = pd.DataFrame([flight_dict])
     
     for col in NUMERIC_FEATURES:
-        if col not in input_df.columns:
+        if col not in input_df.columns or pd.isnull(input_df[col].iloc[0]):
             input_df[col] = np.nan
-    for col in CATEGORICAL_FEATURES:
-        if col not in input_df.columns:
-            input_df[col] = 'Unknown'
+        else:
+            try:
+                input_df[col] = float(input_df[col].iloc[0])
+            except (ValueError, TypeError):
+                input_df[col] = np.nan
 
-    predicted_price = float(pipeline.predict(input_df[NUMERIC_FEATURES + CATEGORICAL_FEATURES])[0])
+    for col in CATEGORICAL_FEATURES:
+        if col not in input_df.columns or pd.isnull(input_df[col].iloc[0]):
+            input_df[col] = 'Unknown'
+        else:
+            input_df[col] = str(input_df[col].iloc[0])
+
+    features_ordered = NUMERIC_FEATURES + CATEGORICAL_FEATURES
+    predicted_price = float(pipeline.predict(input_df[features_ordered])[0])
     predicted_price = max(500.0, round(predicted_price, 2))
 
     if historical_route_median and historical_route_median > 0:

@@ -13,7 +13,6 @@ ENV/
 .streamlit/secrets.toml
 
 # IDE & OS
-.vscode/
 .idea/
 .DS_Store
 Thumbs.db
@@ -34,3 +33,5 @@ generate_components.py
 maker.py
 patch_train.py
 test.txt
+config.bat
+node_modules
