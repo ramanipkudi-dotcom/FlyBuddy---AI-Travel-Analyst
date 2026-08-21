@@ -1,7 +1,7 @@
 """
 FlyBuddy - Price Explorer Page
 ------------------------------
-Interactive multi-attribute data exploration tool with real-time filtering.
+Interactive multi-attribute data exploration tool with real-time filtering and graph interpretations.
 """
 
 import streamlit as st
@@ -17,13 +17,13 @@ import plotly.express as px
 def render_explore_page(df):
     render_header(
         title="Price Explorer",
-        subtitle="Discover what drives airfare across routes, airlines, seasons, and booking channels.",
-        badge_text="🔍 Interactive Exploration"
+        subtitle="Explore flight prices across routes, airlines, cabin classes, and booking conditions.",
+        badge_text="Exploration Tool"
     )
 
     with st.container():
-        st.markdown('<div class="fb-card" style="padding: 16px 20px;">', unsafe_allow_html=True)
-        st.markdown(f"<div style='font-size: 0.82rem; font-weight: 700; color: {THEME['text_muted']}; text-transform: uppercase; margin-bottom: 10px;'>Filter Dataset</div>", unsafe_allow_html=True)
+        st.markdown('<div class="fb-glass-card" style="padding: 18px 22px;">', unsafe_allow_html=True)
+        st.markdown(f"<div style='font-size: 0.78rem; font-weight: 700; color: {THEME['primary_cyan']}; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.05em;'>Filter Flight Data</div>", unsafe_allow_html=True)
 
         col1, col2, col3, col4 = st.columns(4)
 
@@ -80,7 +80,7 @@ def render_explore_page(df):
     if selected_channel != 'All':
         filtered_df = filtered_df[filtered_df['Booking_Channel'] == selected_channel]
 
-    st.markdown(f"<p style='color: {THEME['text_muted']}; font-size: 0.9rem;'>Displaying <b>{len(filtered_df):,}</b> matching flights out of 100,000.</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color: {THEME['text_secondary']}; font-size: 0.9rem;'>Showing <b>{len(filtered_df):,}</b> flights matching selected criteria.</p>", unsafe_allow_html=True)
 
     if filtered_df.empty:
         st.warning("No flights match the selected combination of filters. Please broaden your selection.")
@@ -88,45 +88,26 @@ def render_explore_page(df):
 
     row1_col1, row1_col2 = st.columns(2)
     with row1_col1:
-        st.markdown('<div class="fb-card">', unsafe_allow_html=True)
-        st.plotly_chart(plot_price_distribution(filtered_df, "Filtered Flight Price Distribution"), use_container_width=True)
+        st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
+        st.plotly_chart(plot_price_distribution(filtered_df, "Price Distribution"), use_container_width=True)
+        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px;'><b>What this shows:</b> Fare dispersion across filtered flights reveals price density and outliers.</p>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with row1_col2:
-        st.markdown('<div class="fb-card">', unsafe_allow_html=True)
-        st.plotly_chart(plot_airline_prices(filtered_df, "Airline Median Prices (Filtered)"), use_container_width=True)
+        st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
+        st.plotly_chart(plot_airline_prices(filtered_df, "Airline Typical Fares"), use_container_width=True)
+        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px;'><b>What this shows:</b> Relative typical fare differences between operating carriers.</p>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     row2_col1, row2_col2 = st.columns(2)
     with row2_col1:
-        st.markdown('<div class="fb-card">', unsafe_allow_html=True)
+        st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
         st.plotly_chart(plot_lead_time_curve(filtered_df, "Days Before Departure vs. Price"), use_container_width=True)
+        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px;'><b>What this shows:</b> Advance booking window impact on typical ticket prices.</p>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with row2_col2:
-        st.markdown('<div class="fb-card">', unsafe_allow_html=True)
-        st.plotly_chart(plot_travel_class_prices(filtered_df, "Travel Class Median Prices"), use_container_width=True)
+        st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
+        st.plotly_chart(plot_travel_class_prices(filtered_df, "Travel Class Typical Fares"), use_container_width=True)
+        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px;'><b>What this shows:</b> Price multipliers associated with premium cabin seating.</p>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('<div class="fb-card">', unsafe_allow_html=True)
-    sample_size = min(1500, len(filtered_df))
-    sample_df = filtered_df.sample(sample_size, random_state=42)
-    
-    fig_dist = px.scatter(
-        sample_df,
-        x='Distance_km_numeric',
-        y='Price_clean',
-        color='Travel_Class',
-        opacity=0.6,
-        labels={'Distance_km_numeric': 'Flight Distance (km)', 'Price_clean': 'Price (₹)', 'Travel_Class': 'Class'},
-        title="<b>Flight Distance (km) vs. Price (₹) by Travel Class</b>",
-        color_discrete_map={
-            'Economy': THEME['primary_cyan'],
-            'Premium Economy': '#38BDF8',
-            'Business': THEME['secondary_blue'],
-            'First': THEME['deep_navy']
-        }
-    )
-    fig_dist.update_layout(get_base_layout(x_title="Distance (km)", y_title="Price (₹)"))
-    st.plotly_chart(fig_dist, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)

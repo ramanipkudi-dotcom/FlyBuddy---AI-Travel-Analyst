@@ -1,13 +1,7 @@
 """
-FlyBuddy - AI Travel Analyst
-============================
-Main Streamlit application entry point and master router.
-
-Why this matters for interviews:
-- Simple, modular architecture: routes cleanly between landing, loading,
-  and deep-dive analytical dashboards.
-- Uses `@st.cache_data` and `@st.cache_resource` for high performance.
-- Decouples UI presentation from backend data processing.
+FlyBuddy - Travel Analyst
+=========================
+Master Streamlit application entry point and router with dark glassmorphism theme.
 """
 
 import os
@@ -29,9 +23,6 @@ from app.pages.price_factors import render_price_factors_page
 from app.pages.booking_time import render_booking_time_page
 from app.pages.forecast import render_forecast_page
 from app.pages.recommendations import render_recommendations_page
-from app.pages.model_insights import render_model_insights_page
-from app.pages.data_quality import render_data_quality_page
-from app.pages.methodology import render_methodology_page
 
 # Core Data Preprocessing
 from src.preprocessing import clean_flight_dataframe
@@ -39,7 +30,7 @@ from src.feature_engineering import build_engineered_features
 
 # Set Page Config
 st.set_page_config(
-    page_title="FlyBuddy — AI Travel Analyst",
+    page_title="FlyBuddy — Travel Analyst",
     page_icon="✈",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -53,11 +44,11 @@ apply_custom_theme()
 @st.cache_data(show_spinner=False)
 def load_datasets():
     """
-    Load raw and processed flight datasets with Streamlit caching.
+    Load raw and preprocessed flight datasets with Streamlit caching.
     """
     csv_path = 'data/flight_pricing_dataset.csv'
     if not os.path.exists(csv_path):
-        st.error(f"Dataset not found at {csv_path}. Please verify the file path.")
+        st.error(f"Dataset not found at {csv_path}. Please check data directory.")
         st.stop()
         
     df_raw = pd.read_csv(csv_path)
@@ -105,7 +96,7 @@ def main():
     df_raw, df = load_datasets()
     model_pipeline, metrics = load_model_artifacts()
 
-    # Step 1: Landing Page ("Where are you flying?")
+    # Step 1: Landing Page ("Plan your next flight smarter.")
     if not st.session_state['has_searched']:
         render_landing_page()
         return
@@ -129,15 +120,9 @@ def main():
     elif selected_page == 'Best Time to Book':
         render_booking_time_page(df)
     elif selected_page == 'Price Forecast':
-        render_forecast_page()
+        render_forecast_page(df, model_pipeline, metrics)
     elif selected_page == 'Recommendations':
         render_recommendations_page(df)
-    elif selected_page == 'Model Insights':
-        render_model_insights_page(metrics)
-    elif selected_page == 'Data Quality':
-        render_data_quality_page(df_raw, df)
-    elif selected_page == 'Methodology':
-        render_methodology_page()
     else:
         render_overview_page(df, model_pipeline, metrics)
 

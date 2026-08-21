@@ -1,7 +1,7 @@
 """
-FlyBuddy - Best Time to Book Page (Part 3)
-------------------------------------------
-Empirical lead-time booking window analysis with real historical distributions.
+FlyBuddy - Best Time to Book Page
+---------------------------------
+Explore how historical fares change based on how far in advance the flight was booked.
 """
 
 import streamlit as st
@@ -9,19 +9,19 @@ import pandas as pd
 from app.components.theme import THEME
 from app.components.header import render_header
 from app.components.cards import render_kpi_card, render_insight_card
-from app.components.charts import plot_lead_time_curve, get_base_layout
+from app.components.charts import get_base_layout
 from src.booking_analysis import calculate_booking_lead_time_stats
 import plotly.graph_objects as go
 
 def render_booking_time_page(df):
     render_header(
-        title="Best Time to Book",
-        subtitle="When should you book for historically favorable prices?",
-        badge_text="📅 Part 3 Priority"
+        title="When should you book?",
+        subtitle="Explore how historical fares change based on how far in advance the flight was booked.",
+        badge_text="Booking Timing"
     )
 
     with st.container():
-        st.markdown('<div class="fb-card" style="padding: 16px 20px;">', unsafe_allow_html=True)
+        st.markdown('<div class="fb-glass-card" style="padding: 16px 22px;">', unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
 
         sources = sorted([str(x) for x in df['Source'].dropna().unique()])
@@ -51,24 +51,24 @@ def render_booking_time_page(df):
 
     st.markdown(
         f"""
-        <div class="fb-hero-card" style="background: linear-gradient(135deg, {THEME['surface']} 0%, {THEME['primary_light']} 100%);">
-            <div style="font-size: 0.8rem; font-weight: 700; color: {THEME['primary_cyan']}; text-transform: uppercase;">
+        <div class="fb-hero-card">
+            <div style="font-size: 0.78rem; font-weight: 700; color: {THEME['primary_cyan']}; text-transform: uppercase; letter-spacing: 0.05em;">
                 Historically Favorable Booking Window ({sel_src} → {sel_dst})
             </div>
-            <div style="font-size: 2.2rem; font-weight: 800; color: {THEME['deep_navy']}; margin: 6px 0;">
+            <div style="font-size: 2.2rem; font-weight: 800; color: {THEME['text_primary']}; margin: 6px 0;">
                 {cheapest_window}
             </div>
-            <div style="font-size: 1.05rem; color: {THEME['text_muted']};">
-                Historically, median fares in this window were <b>₹{cheapest_price:,.0f}</b> (~<b>{savings_pct}% lower</b> than overall median of ₹{overall_median:,.0f}).
+            <div style="font-size: 1rem; color: {THEME['text_secondary']};">
+                Historically, fares were lower around this booking window, with a median price of <b style="color: {THEME['primary_cyan']};">₹{cheapest_price:,.0f}</b> (~<b style="color: {THEME['success']};">{savings_pct}% lower</b> than the route median of ₹{overall_median:,.0f}).
             </div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    st.markdown(f"<h3 style='color: {THEME['deep_navy']}; font-weight: 800; font-size: 1.25rem;'>📊 Price vs. Booking Lead-Time</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='color: {THEME['text_primary']}; font-weight: 700; font-size: 1.2rem;'>Typical Prices by Booking Time</h3>", unsafe_allow_html=True)
     
-    st.markdown('<div class="fb-card">', unsafe_allow_html=True)
+    st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
     window_df = stats['window_stats_df']
     
     fig = go.Figure()
@@ -76,28 +76,28 @@ def render_booking_time_page(df):
         x=window_df['Window_Bin'].astype(str),
         y=window_df['median_price'],
         marker=dict(
-            color=[THEME['success'] if str(w) == cheapest_window else THEME['secondary_blue'] for w in window_df['Window_Bin']]
+            color=[THEME['success'] if str(w) == cheapest_window else THEME['primary_cyan'] for w in window_df['Window_Bin']],
+            line=dict(color='rgba(255,255,255,0.15)', width=0.5)
         ),
-        hovertemplate="Window: %{x}<br>Median Price: ₹%{y:,.0f}<extra></extra>"
+        hovertemplate="Booking Window: %{x}<br>Typical Fare: ₹%{y:,.0f}<extra></extra>"
     ))
-    fig.update_layout(get_base_layout(title=f"Median Fare Across Booking Windows ({sel_src} → {sel_dst})", x_title="Booking Window", y_title="Median Price (₹)"))
+    fig.update_layout(get_base_layout(title=f"Typical Fares Across Booking Windows ({sel_src} → {sel_dst})", x_title="Booking Timing", y_title="Typical Fare (₹)"))
     st.plotly_chart(fig, use_container_width=True)
+    st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px;'><b>What this shows:</b> Fares are generally more favorable when booked during the historically lower-price booking window ({cheapest_window}).</p>", unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     col_w1, col_w2 = st.columns(2)
     with col_w1:
         render_insight_card(
-            icon="💡",
-            title="Why does this window show lower prices?",
-            explanation="Airlines open initial booking inventory with promotional allocations. When departures are 22-35 days away, carriers balance seat fill-rate goals against revenue maximization before raising prices on the final remaining seats.",
-            badge_text="Airline Economics",
+            title="Why are fares lower in this window?",
+            explanation="Airlines balance seat fill rates with revenue goals around 22–35 days before departure, offering competitive inventory before raising prices on the remaining seats.",
+            badge_text="Booking Behavior",
             badge_type="good"
         )
     with col_w2:
         render_insight_card(
-            icon="⚠️",
-            title="Important Limitations & Disclaimer",
-            explanation=stats['disclaimer'],
-            badge_text="Analytical Notice",
+            title="Important Note",
+            explanation="These insights are based on historical flight pricing patterns and do not guarantee future prices. Seasonal demand and holidays can alter fare timing.",
+            badge_text="Notice",
             badge_type="high"
         )

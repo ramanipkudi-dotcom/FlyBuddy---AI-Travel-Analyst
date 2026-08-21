@@ -1,7 +1,7 @@
 """
-FlyBuddy - Price Factors Page ("What Drives Flight Prices?")
-------------------------------------------------------------
-Deep dive into feature importance, correlations, and category drivers for interview defense.
+FlyBuddy - Price Factors Page ("What affects your fare?")
+---------------------------------------------------------
+Explains which factors have the biggest influence on fares in plain, accessible language.
 """
 
 import streamlit as st
@@ -14,77 +14,65 @@ import plotly.express as px
 
 def render_price_factors_page(df, metrics):
     render_header(
-        title="What Drives Flight Prices?",
-        subtitle="Analytical breakdown of the primary factors influencing airfares based on EDA and Machine Learning.",
-        badge_text="⚡ Price Drivers"
+        title="What affects your fare?",
+        subtitle="See which factors have the biggest influence on fares in historical flight data.",
+        badge_text="Price Drivers"
     )
 
     top_importances = metrics.get('top_feature_importances', [])
     if top_importances:
-        st.markdown('<div class="fb-card">', unsafe_allow_html=True)
-        fig_imp = plot_feature_importance(top_importances, title="Relative Feature Importance (Random Forest Regressor)")
+        st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
+        fig_imp = plot_feature_importance(top_importances, title="Main Price Factors")
         st.plotly_chart(fig_imp, use_container_width=True)
-        st.markdown(
-            f"""
-            <div style="font-size: 0.84rem; color: {THEME['text_muted']}; line-height: 1.5;">
-                <b>How this is calculated:</b> Feature importance is derived from the Mean Decrease in Impurity across 50 decision trees in the Random Forest Regressor. It measures how much each feature contributes to reducing prediction variance.
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px;'><b>What this shows:</b> Flight duration, route distance, and cabin class account for over 70% of total fare variations.</p>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown(f"<h3 style='color: {THEME['deep_navy']}; font-weight: 800; font-size: 1.25rem;'>🔍 Key Driver Analysis</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='color: {THEME['text_primary']}; font-weight: 700; font-size: 1.2rem;'>Key Price Drivers</h3>", unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
     with col1:
         render_insight_card(
-            icon="⏱",
-            title="1. Flight Duration (~44.6% Importance)",
-            explanation="Duration is the strongest single predictor of airfare. Long-haul flights consume significantly more fuel, require larger aircraft types, and incur higher crew/route operating expenses.",
-            badge_text="Top Driver",
+            title="1. Flight Duration (~44.6% influence)",
+            explanation="Duration is the single strongest factor influencing ticket price. Longer flights consume more fuel, require larger aircraft, and incur higher crew and operational costs.",
+            badge_text="Primary Factor",
             badge_type="good"
         )
         render_insight_card(
-            icon="💺",
-            title="3. Travel Class (~10.8% Importance)",
-            explanation="Airlines use price discrimination across cabin classes. Premium cabins consume more floor space per passenger and include luxury amenities, creating distinct price multipliers.",
+            title="3. Travel Class (~10.8% influence)",
+            explanation="Cabin class creates distinct pricing tiers. Premium cabins offer greater comfort, space, and flexibility, commanding substantially higher fares per seat.",
             badge_text="High Impact",
-            badge_type="typical"
+            badge_type="violet"
         )
         render_insight_card(
-            icon="✈",
-            title="5. Operating Airline (~4.4% Importance)",
-            explanation="Different airlines operate on low-cost vs full-service business models, creating baseline price differentials across identical routes.",
-            badge_text="Market Tier",
+            title="5. Operating Airline (~4.4% influence)",
+            explanation="Different airlines operate on low-cost vs full-service models, creating recognizable fare differences across identical routes.",
+            badge_text="Carrier Tier",
             badge_type="typical"
         )
 
     with col2:
         render_insight_card(
-            icon="📍",
-            title="2. Flight Distance (~17.0% Importance)",
-            explanation="Distance tightly couples with duration and airport fee structures, forming the fundamental baseline for airline seat-mile revenue management.",
+            title="2. Route Distance (~17.0% influence)",
+            explanation="Distance establishes the baseline operational cost per passenger-kilometer across city pairs.",
             badge_text="Major Factor",
             badge_type="good"
         )
         render_insight_card(
-            icon="📅",
-            title="4. Days Before Departure (~5.9% Importance)",
-            explanation="Yield management algorithms increase prices exponentially as departure approaches to capture inelastic demand from business and emergency travelers.",
-            badge_text="Dynamic Factor",
+            title="4. Days Before Departure (~5.9% influence)",
+            explanation="Fares typically increase as departure draws near, reflecting airline yield management on remaining seat inventory.",
+            badge_text="Timing Factor",
             badge_type="typical"
         )
         render_insight_card(
-            icon="🛑",
-            title="6. Total Stops & Route (~5.8% Importance)",
-            explanation="Route topology and intermediate layovers determine both aircraft utilization efficiency and passenger convenience premiums.",
-            badge_text="Routing Factor",
+            title="6. Number of Stops & Routing (~5.8% influence)",
+            explanation="Direct non-stop flights save time and carry convenience premiums compared to multi-stop itineraries.",
+            badge_text="Routing",
             badge_type="typical"
         )
 
-    st.markdown('<div class="fb-card" style="margin-top: 14px;">', unsafe_allow_html=True)
-    st.markdown(f"<h4 style='color: {THEME['deep_navy']}; font-weight: 700; margin-bottom: 12px;'>Median Price by Season & Weekday (₹)</h4>", unsafe_allow_html=True)
+    # Heatmap
+    st.markdown('<div class="fb-glass-card" style="margin-top: 16px;">', unsafe_allow_html=True)
+    st.markdown(f"<h4 style='color: {THEME['text_primary']}; font-weight: 700; margin-bottom: 12px; font-size: 1rem;'>Typical Fare by Season & Weekday (₹)</h4>", unsafe_allow_html=True)
     
     pivot_df = df.pivot_table(index='Weekday', columns='Season', values='Price_clean', aggfunc='median')
     days_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -92,12 +80,13 @@ def render_price_factors_page(df, metrics):
 
     fig_heat = px.imshow(
         pivot_df,
-        labels=dict(x="Season", y="Weekday", color="Median Price (₹)"),
+        labels=dict(x="Season", y="Weekday", color="Typical Fare (₹)"),
         x=pivot_df.columns,
         y=pivot_df.index,
-        color_continuous_scale=[[0, THEME['primary_light']], [0.5, THEME['primary_cyan']], [1, THEME['deep_navy']]],
+        color_continuous_scale=[[0, '#0F172A'], [0.5, '#0891B2'], [1, '#22D3EE']],
         text_auto='.0f'
     )
-    fig_heat.update_layout(get_base_layout(height=340))
+    fig_heat.update_layout(get_base_layout(height=320))
     st.plotly_chart(fig_heat, use_container_width=True)
+    st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px;'><b>What this shows:</b> Seasonal travel demand patterns highlight peak travel periods and mid-week savings opportunities.</p>", unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
