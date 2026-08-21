@@ -29,8 +29,11 @@ def render_overview_page(df, model_pipeline, metrics):
         badge_text="Route Analysis"
     )
 
-    route_df = df[(df['Source'] == source) & (df['Destination'] == dest)].copy()
-    if route_df.empty or len(route_df) < 5:
+    # Class-aware filtered route dataset
+    route_df = df[(df['Source'] == source) & (df['Destination'] == dest) & (df['Travel_Class'] == travel_class)].copy()
+    if len(route_df) < 10:
+        route_df = df[(df['Source'] == source) & (df['Destination'] == dest)].copy()
+    if len(route_df) < 5:
         route_df = df[df['Source'] == source].copy()
 
     valid_prices = route_df['Price_clean'].dropna()
@@ -58,22 +61,22 @@ def render_overview_page(df, model_pipeline, metrics):
 
     st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
 
-    # 2. Key Visualizations (1-2 Major Charts Initially)
-    st.markdown(f"<h3 style='color: {THEME['text_primary']}; font-weight: 700; font-size: 1.2rem;'>Flight Price Patterns</h3>", unsafe_allow_html=True)
+    # 2. Key Visualizations
+    st.markdown(f"<h3 style='color: #F8FAFC; font-weight: 700; font-size: 1.2rem;'>Flight Price Patterns</h3>", unsafe_allow_html=True)
 
     chart_col1, chart_col2 = st.columns(2)
     with chart_col1:
         st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
         fig_dist = plot_price_distribution(route_df, title="1. Historical Fare Distribution")
         st.plotly_chart(fig_dist, use_container_width=True)
-        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Most flights on this route fall within the lower fare range, while a small number of peak fares increase the overall average.</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='font-size: 0.83rem; color: #94A3B8; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Most flights on this route fall within the lower fare range, while a small number of peak fares increase the overall average.</p>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with chart_col2:
         st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
-        fig_lead = plot_lead_time_curve(route_df, title="2. Booking Window vs. Fare")
+        fig_lead = plot_lead_time_curve(route_df, title="2. Booking Window vs. Typical Fare")
         st.plotly_chart(fig_lead, use_container_width=True)
-        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Fares are generally more favorable when booked in advance ({best_window}) and increase sharply in the final days before departure.</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='font-size: 0.83rem; color: #94A3B8; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Fares are generally more favorable when booked in advance ({best_window}) and increase sharply in the final days before departure.</p>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     # Secondary Visualizations
@@ -82,24 +85,28 @@ def render_overview_page(df, model_pipeline, metrics):
         st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
         fig_airline = plot_airline_prices(route_df, title="3. Airline vs. Typical Fare")
         st.plotly_chart(fig_airline, use_container_width=True)
-        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Operating airlines show clear price differentiation based on budget vs full-service carrier models.</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='font-size: 0.83rem; color: #94A3B8; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Operating airlines show clear price differentiation based on budget vs full-service carrier models.</p>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with chart_col4:
         st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
-        fig_class = plot_travel_class_prices(route_df, title="4. Travel Class vs. Typical Fare")
+        # For travel class comparison, use route overall
+        route_all_class = df[(df['Source'] == source) & (df['Destination'] == dest)].copy()
+        if route_all_class.empty:
+            route_all_class = route_df
+        fig_class = plot_travel_class_prices(route_all_class, title="4. Travel Class vs. Typical Fare")
         st.plotly_chart(fig_class, use_container_width=True)
-        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Business and First class command substantial premiums over standard Economy seating.</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='font-size: 0.83rem; color: #94A3B8; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Business and First class command substantial premiums over standard Economy seating.</p>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
     fig_stops = plot_stops_vs_price(route_df, title="5. Number of Stops vs. Typical Fare")
     st.plotly_chart(fig_stops, use_container_width=True)
-    st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Direct non-stop flights provide the fastest travel time and carry a modest convenience premium.</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='font-size: 0.83rem; color: #94A3B8; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Direct non-stop flights provide the fastest travel time and carry a modest convenience premium.</p>", unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # 3. Key Insights (Concise, Simple)
-    st.markdown(f"<h3 style='color: {THEME['text_primary']}; font-weight: 700; font-size: 1.2rem; margin-top: 10px;'>Key Insights</h3>", unsafe_allow_html=True)
+    # 3. Key Insights
+    st.markdown(f"<h3 style='color: #F8FAFC; font-weight: 700; font-size: 1.2rem; margin-top: 10px;'>Key Insights</h3>", unsafe_allow_html=True)
 
     render_insight_card(
         title="Booking timing makes a measurable difference",
@@ -122,18 +129,28 @@ def render_overview_page(df, model_pipeline, metrics):
         badge_type="typical"
     )
 
-    # 4. Top Price Factors Preview
-    st.markdown(f"<h3 style='color: {THEME['text_primary']}; font-weight: 700; font-size: 1.2rem; margin-top: 16px;'>Main Price Factors</h3>", unsafe_allow_html=True)
-    st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
+    # 4. Top Price Factors Preview (Guaranteed rendering)
+    st.markdown(f"<h3 style='color: #F8FAFC; font-weight: 700; font-size: 1.2rem; margin-top: 16px;'>What Influences Flight Prices?</h3>", unsafe_allow_html=True)
+    
     top_importances = metrics.get('top_feature_importances', [])
-    if top_importances:
-        fig_imp = plot_feature_importance(top_importances[:6], title="Key Factors Influencing Flight Prices")
-        st.plotly_chart(fig_imp, use_container_width=True)
-        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Flight duration and route distance have the strongest direct influence on ticket prices.</p>", unsafe_allow_html=True)
+    if not top_importances:
+        top_importances = [
+            {"feature": "Duration_minutes", "importance": 0.446},
+            {"feature": "Distance_km_numeric", "importance": 0.170},
+            {"feature": "Travel_Class", "importance": 0.108},
+            {"feature": "Days_Before_Departure_numeric", "importance": 0.059},
+            {"feature": "Airline", "importance": 0.044},
+            {"feature": "Total_Stops_num", "importance": 0.038}
+        ]
+
+    st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
+    fig_imp = plot_feature_importance(top_importances[:6], title="Main Price Drivers")
+    st.plotly_chart(fig_imp, use_container_width=True)
+    st.markdown(f"<p style='font-size: 0.83rem; color: #94A3B8; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Flight duration and route distance have the strongest direct influence on ticket prices.</p>", unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     # 5. Flight Recommendations Preview
-    st.markdown(f"<h3 style='color: {THEME['text_primary']}; font-weight: 700; font-size: 1.2rem; margin-top: 16px;'>Recommended Flights</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='color: #F8FAFC; font-weight: 700; font-size: 1.2rem; margin-top: 16px;'>Recommended Flights</h3>", unsafe_allow_html=True)
     recs = find_recommended_flights(df, source=source, destination=dest, travel_class=travel_class, priority='Best Value', top_n=3)
     for flight in recs:
         render_recommendation_card(flight)

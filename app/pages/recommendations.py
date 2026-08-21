@@ -1,60 +1,72 @@
 """
-FlyBuddy - Flight Recommendations Page
---------------------------------------
-Filterable flight recommendations ranked by travel priorities.
+FlyBuddy - Recommendations Page
+-------------------------------
+Explainable flight recommendation cards sorted by value, lowest price, duration, or stops.
 """
 
 import streamlit as st
 import pandas as pd
 from app.components.theme import THEME
 from app.components.header import render_header
-from app.components.cards import render_recommendation_card
+from app.components.cards import render_recommendation_card, render_kpi_card
 from src.recommendation import find_recommended_flights
 
 def render_recommendations_page(df):
+    source = st.session_state.get('active_source', 'Chennai')
+    dest = st.session_state.get('active_dest', 'Mumbai')
+    travel_class = st.session_state.get('active_class', 'Economy')
+    route_name = f"{source} → {dest}"
+
     render_header(
         title="Flight Recommendations",
-        subtitle="Personalized flight options ranked by your travel priorities based on historical flight data.",
-        badge_text="Flight Finder"
+        subtitle=f"Explainable flight recommendations on {route_name} ({travel_class}) based on historical rankings.",
+        badge_text="Recommendations"
     )
 
     with st.container():
         st.markdown('<div class="fb-glass-card" style="padding: 16px 22px;">', unsafe_allow_html=True)
-        col1, col2, col3, col4 = st.columns(4)
-
-        sources = sorted([str(x) for x in df['Source'].dropna().unique()])
-        dests = sorted([str(x) for x in df['Destination'].dropna().unique()])
-        classes = ['Economy', 'Premium Economy', 'Business', 'First']
-        priorities = ['Best Value', 'Lowest Price', 'Fastest Option', 'Fewest Stops']
-
-        default_from_idx = sources.index(st.session_state.get('active_source', 'Chennai')) if st.session_state.get('active_source', 'Chennai') in sources else 0
-        default_to_idx = dests.index(st.session_state.get('active_dest', 'Mumbai')) if st.session_state.get('active_dest', 'Mumbai') in dests else 0
+        col1, col2, col3 = st.columns(3)
 
         with col1:
-            sel_src = st.selectbox("Origin", sources, index=default_from_idx, key="rec_src")
+            priority = st.selectbox(
+                "Recommendation Priority",
+                ["Best Value", "Lowest Price", "Fastest Option", "Fewest Stops"],
+                index=0,
+                key="rec_priority"
+            )
         with col2:
-            sel_dst = st.selectbox("Destination", dests, index=default_to_idx, key="rec_dst")
+            max_stops = st.selectbox(
+                "Maximum Stops",
+                ["Any Stops", "Direct (Non-stop)", "Up to 1 Stop"],
+                index=0,
+                key="rec_stops"
+            )
         with col3:
-            sel_class = st.selectbox("Travel Class", classes, index=0, key="rec_class")
-        with col4:
-            sel_prio = st.selectbox("Sort Priority", priorities, index=0, key="rec_prio")
+            top_count = st.slider("Number of Flights", min_value=3, max_value=15, value=5, key="rec_count")
 
         st.markdown('</div>', unsafe_allow_html=True)
 
-    prio_map = {
-        'Best Value': 'Best Value',
-        'Lowest Price': 'Cheapest',
-        'Fastest Option': 'Fastest',
-        'Fewest Stops': 'Fewest Stops'
-    }
-    ranked_prio = prio_map.get(sel_prio, 'Best Value')
+    max_stops_val = None
+    if max_stops == "Direct (Non-stop)":
+        max_stops_val = 0
+    elif max_stops == "Up to 1 Stop":
+        max_stops_val = 1
 
-    recs = find_recommended_flights(df, source=sel_src, destination=sel_dst, travel_class=sel_class, priority=ranked_prio, top_n=6)
+    recommended = find_recommended_flights(
+        df,
+        source=source,
+        destination=dest,
+        travel_class=travel_class,
+        priority=priority,
+        max_stops=max_stops_val,
+        top_n=top_count
+    )
 
-    st.markdown(f"<h3 style='color: {THEME['text_primary']}; font-weight: 700; font-size: 1.2rem; margin-top: 10px;'>Recommended Flights ({sel_src} → {sel_dst})</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='color: var(--fb-text-primary, #F8FAFC); font-weight: 700; font-size: 1.2rem;'>Top Ranked Itineraries ({priority})</h3>", unsafe_allow_html=True)
 
-    if not recs:
-        st.info("No matching flights found for this specific route and filter selection.")
-    else:
-        for flight in recs:
-            render_recommendation_card(flight)
+    if not recommended:
+        st.warning("No flights matched the selected recommendation criteria. Try relaxing the stops filter.")
+        return
+
+    for flight in recommended:
+        render_recommendation_card(flight)

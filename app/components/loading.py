@@ -155,6 +155,6 @@ def render_analysis_loading(source_city, dest_city):
         # Clean all whitespace per line to strictly prevent markdown code block triggers
         cleaned_html = "\n".join(line.strip() for line in html_str.splitlines())
         container.markdown(cleaned_html, unsafe_allow_html=True)
-        time.sleep(0.8)
+        time.sleep(0.5)
 
     container.empty()

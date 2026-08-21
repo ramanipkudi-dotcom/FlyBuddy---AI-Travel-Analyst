@@ -51,14 +51,14 @@ def render_booking_time_page(df):
 
     st.markdown(
         f"""
-        <div class="fb-hero-card">
+        <div class="fb-glass-card">
             <div style="font-size: 0.78rem; font-weight: 700; color: {THEME['primary_cyan']}; text-transform: uppercase; letter-spacing: 0.05em;">
                 Historically Favorable Booking Window ({sel_src} → {sel_dst})
             </div>
-            <div style="font-size: 2.2rem; font-weight: 800; color: {THEME['text_primary']}; margin: 6px 0;">
+            <div style="font-size: 2.2rem; font-weight: 800; color: var(--fb-text-primary, #F8FAFC); margin: 6px 0;">
                 {cheapest_window}
             </div>
-            <div style="font-size: 1rem; color: {THEME['text_secondary']};">
+            <div style="font-size: 1rem; color: var(--fb-text-secondary, #94A3B8);">
                 Historically, fares were lower around this booking window, with a median price of <b style="color: {THEME['primary_cyan']};">₹{cheapest_price:,.0f}</b> (~<b style="color: {THEME['success']};">{savings_pct}% lower</b> than the route median of ₹{overall_median:,.0f}).
             </div>
         </div>
@@ -66,7 +66,7 @@ def render_booking_time_page(df):
         unsafe_allow_html=True
     )
 
-    st.markdown(f"<h3 style='color: {THEME['text_primary']}; font-weight: 700; font-size: 1.2rem;'>Typical Prices by Booking Time</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='color: var(--fb-text-primary, #F8FAFC); font-weight: 700; font-size: 1.2rem;'>Typical Prices by Booking Time</h3>", unsafe_allow_html=True)
     
     st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
     window_df = stats['window_stats_df']
@@ -83,7 +83,7 @@ def render_booking_time_page(df):
     ))
     fig.update_layout(get_base_layout(title=f"Typical Fares Across Booking Windows ({sel_src} → {sel_dst})", x_title="Booking Timing", y_title="Typical Fare (₹)"))
     st.plotly_chart(fig, use_container_width=True)
-    st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px;'><b>What this shows:</b> Fares are generally more favorable when booked during the historically lower-price booking window ({cheapest_window}).</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='font-size: 0.83rem; color: var(--fb-text-secondary, #94A3B8); margin-top: 4px;'><b>What this shows:</b> Fares are generally more favorable when booked during the historically lower-price booking window ({cheapest_window}).</p>", unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     col_w1, col_w2 = st.columns(2)
@@ -99,5 +99,5 @@ def render_booking_time_page(df):
             title="Important Note",
             explanation="These insights are based on historical flight pricing patterns and do not guarantee future prices. Seasonal demand and holidays can alter fare timing.",
             badge_text="Notice",
-            badge_type="high"
+            badge_type="typical"
         )

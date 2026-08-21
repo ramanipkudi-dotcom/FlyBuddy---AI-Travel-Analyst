@@ -9,11 +9,11 @@ from app.components.theme import THEME
 
 def render_kpi_card(label, value, subtext=None, delta=None, delta_positive=True):
     """
-    Render a clean dark glass metric KPI card.
+    Render a clean real-glass metric KPI card.
     """
     delta_html = ""
     if delta:
-        color = THEME['success'] if delta_positive else THEME['danger']
+        color = THEME['success'] if delta_positive else THEME['warning']
         sign = "↓" if delta_positive else "↑"
         delta_html = f"<div style='font-size: 0.78rem; font-weight: 600; color: {color}; margin-top: 3px;'>{sign} {delta}</div>"
 
@@ -54,10 +54,10 @@ def render_recommendation_card(flight):
     <div class="fb-flight-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
             <div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: {THEME['text_primary']};">
+                <div style="font-size: 1.1rem; font-weight: 700; color: var(--fb-text-primary, #F8FAFC);">
                     {flight.get('airline', 'Airline')}
                 </div>
-                <div style="font-size: 0.85rem; color: {THEME['text_secondary']}; margin-top: 2px;">
+                <div style="font-size: 0.85rem; color: var(--fb-text-secondary, #94A3B8); margin-top: 2px;">
                     {flight.get('source')} → {flight.get('destination')} • {flight.get('travel_class', 'Economy')}
                 </div>
                 <div style="font-size: 0.82rem; color: {THEME['primary_cyan']}; font-weight: 500; margin-top: 4px;">
@@ -66,10 +66,10 @@ def render_recommendation_card(flight):
             </div>
             <div style="text-align: right;">
                 <div class="fb-flight-price">₹{flight.get('price', 0):,.0f}</div>
-                <div style="font-size: 0.74rem; color: {THEME['text_secondary']};">Typical fare</div>
+                <div style="font-size: 0.74rem; color: var(--fb-text-secondary, #94A3B8);">Typical fare</div>
             </div>
         </div>
-        <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed {THEME['border_subtle']};">
+        <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--fb-border-subtle, rgba(255, 255, 255, 0.12));">
             <div>{chips_html}</div>
         </div>
     </div>

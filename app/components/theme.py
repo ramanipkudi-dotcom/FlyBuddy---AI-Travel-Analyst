@@ -1,9 +1,9 @@
 """
-FlyBuddy - Premium Real Glassmorphism Design System & Client-Side Interactive Layer
+FlyBuddy - Premium Visible Glassmorphism Design System & Client-Side Interactive Layer
 ---------------------------------------------------------------------------------
-Provides color tokens, atmospheric aviation gradients, real glassmorphism styling,
-high-contrast inputs, distinct sidebar styling, clean Streamlit overrides,
-and Streamlit-compatible client-side interactive background, parallax, cursor & trail.
+Dark Theme Only. Provides theme-aware color tokens, atmospheric aviation gradients,
+visible glassmorphism styling, Uiverse-inspired sidebar hover animations, and client-side
+interactive visual canvas (background constellation network, mouse parallax, cursor & trail).
 """
 
 import streamlit as st
@@ -11,48 +11,65 @@ import streamlit.components.v1 as components
 
 THEME = {
     'bg_deep': '#040912',
-    'bg_surface': '#0A172B',
-    'sidebar_bg': '#0B192C',
-    'glass_card': 'rgba(12, 24, 46, 0.72)',
-    'glass_floating': 'linear-gradient(145deg, rgba(14, 28, 52, 0.88) 0%, rgba(20, 38, 68, 0.72) 100%)',
+    'bg_surface': '#07101E',
+    'sidebar_bg': '#07101E',
+    'glass_card': 'rgba(10, 25, 50, 0.55)',
+    'glass_floating': 'linear-gradient(145deg, rgba(12, 28, 54, 0.82) 0%, rgba(18, 38, 70, 0.65) 100%)',
     'primary_cyan': '#22D3EE',
     'secondary_violet': '#8B5CF6',
     'accent_blue': '#38BDF8',
     'text_primary': '#F8FAFC',
     'text_secondary': '#94A3B8',
     'text_muted': '#64748B',
-    'border_subtle': 'rgba(255, 255, 255, 0.08)',
-    'border_cyan': 'rgba(34, 211, 238, 0.3)',
+    'border_subtle': 'rgba(120, 210, 255, 0.20)',
+    'border_top': 'rgba(255, 255, 255, 0.32)',
+    'border_cyan': 'rgba(34, 211, 238, 0.45)',
     'success': '#34D399',
     'success_bg': 'rgba(52, 211, 153, 0.14)',
     'warning': '#FBBF24',
     'warning_bg': 'rgba(251, 191, 36, 0.14)',
     'card_radius': '20px',
-    'card_shadow': '0 16px 40px rgba(0, 0, 0, 0.55)'
+    'card_shadow': '0 12px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12)'
 }
 
 def apply_custom_theme():
-    """
-    Inject clean, real glassmorphism CSS, high-contrast inputs, distinct sidebar,
-    and client-side interactive visual canvas (parallax, glowing cursor & trail).
-    """
     css = f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-    /* Global Dark Aviation Canvas */
-    html, body, [class*="css"], .stApp {{
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background-color: {THEME['bg_deep']} !important;
-        background-image: 
-            radial-gradient(circle at 14% 16%, rgba(34, 211, 238, 0.11) 0%, transparent 45%),
-            radial-gradient(circle at 86% 84%, rgba(139, 92, 246, 0.12) 0%, transparent 45%),
-            radial-gradient(circle at 50% 50%, rgba(10, 23, 43, 0.55) 0%, transparent 100%) !important;
-        background-attachment: fixed !important;
-        color: {THEME['text_primary']} !important;
+    :root {{
+        --fb-bg-deep: #040912;
+        --fb-bg-surface: #07101E;
+        --fb-sidebar-bg: linear-gradient(180deg, #07101E 0%, #03060D 100%);
+        --fb-glass-card: rgba(10, 25, 50, 0.55);
+        --fb-glass-floating: linear-gradient(145deg, rgba(12, 28, 54, 0.82) 0%, rgba(18, 38, 70, 0.65) 100%);
+        --fb-text-primary: #F8FAFC;
+        --fb-text-secondary: #94A3B8;
+        --fb-text-muted: #64748B;
+        --fb-border-subtle: rgba(120, 210, 255, 0.20);
+        --fb-border-top: rgba(255, 255, 255, 0.32);
+        --fb-input-bg: #0A1628;
+        --fb-input-text: #F8FAFC;
+        --fb-input-border: rgba(120, 210, 255, 0.22);
+        --fb-sidebar-item-bg: rgba(10, 22, 42, 0.55);
+        --fb-sidebar-item-text: #94A3B8;
+        --fb-sidebar-border: rgba(34, 211, 238, 0.22);
+        --fb-card-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
     }}
 
-    /* Streamlit Chrome & Viewport Padding */
+    /* Global Dark Aviation Canvas (Left: Navy, Center: Midnight Blue, Right: Navy/Purple) */
+    html, body, [class*="css"], .stApp {{
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: var(--fb-bg-deep) !important;
+        background-image: 
+            radial-gradient(circle at 12% 18%, rgba(34, 211, 238, 0.11) 0%, transparent 45%),
+            radial-gradient(circle at 88% 82%, rgba(139, 92, 246, 0.11) 0%, transparent 45%),
+            linear-gradient(135deg, #050E1F 0%, #040912 50%, #0A0E24 100%) !important;
+        background-attachment: fixed !important;
+        color: var(--fb-text-primary) !important;
+    }}
+
+    /* Header Styling */
     header[data-testid="stHeader"] {{
         background: transparent !important;
         height: 1.2rem !important;
@@ -64,7 +81,7 @@ def apply_custom_theme():
     }}
     
     .main .block-container {{
-        padding-top: 0.8rem !important;
+        padding-top: 0.6rem !important;
         padding-bottom: 2.5rem !important;
         padding-left: 1.8rem !important;
         padding-right: 1.8rem !important;
@@ -73,145 +90,181 @@ def apply_custom_theme():
         z-index: 2 !important;
     }}
 
-    /* DISTINCT SIDEBAR SURFACE */
+    /* DISTINCT REAL-GLASS SIDEBAR SURFACE */
     [data-testid="stSidebar"] {{
-        background: linear-gradient(180deg, #0B192C 0%, #050E1B 100%) !important;
-        border-right: 1.5px solid rgba(34, 211, 238, 0.16) !important;
-        box-shadow: 10px 0 35px rgba(0, 0, 0, 0.6) !important;
+        background: var(--fb-sidebar-bg) !important;
+        backdrop-filter: blur(24px) saturate(140%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+        border-right: 1.5px solid var(--fb-sidebar-border) !important;
+        box-shadow: 10px 0 35px rgba(0, 0, 0, 0.65) !important;
         z-index: 10 !important;
     }}
     [data-testid="stSidebar"] > div:first-child {{
-        padding-top: 1.25rem !important;
+        padding-top: 1rem !important;
         padding-left: 1.2rem !important;
         padding-right: 1.2rem !important;
     }}
 
-    /* IMPROVED SIDEBAR BUTTONS */
+    /* SIDEBAR NAVIGATION ITEMS (CLEAN TEXT, NO EMOJIS, UIVERSE HOVER SWEEP) */
     [data-testid="stSidebar"] div.stRadio > div {{
-        gap: 8px !important;
+        gap: 7px !important;
     }}
-    [data-testid="stSidebar"] div.stRadio > div > label {{
-        background: rgba(15, 26, 46, 0.6) !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
-        padding: 10px 15px !important;
-        border-radius: 14px !important;
-        font-size: 0.92rem !important;
-        font-weight: 600 !important;
-        color: {THEME['text_secondary']} !important;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        border: 1px solid rgba(255, 255, 255, 0.06) !important;
-        cursor: pointer !important;
-    }}
-    [data-testid="stSidebar"] div.stRadio > div > label:hover {{
-        background: rgba(34, 211, 238, 0.12) !important;
-        color: {THEME['primary_cyan']} !important;
-        border-color: rgba(34, 211, 238, 0.35) !important;
-        transform: translateX(3px) !important;
-        box-shadow: 0 4px 15px rgba(34, 211, 238, 0.1) !important;
-    }}
-    [data-testid="stSidebar"] div.stRadio > div > label:has(input:checked) {{
-        background: linear-gradient(135deg, rgba(34, 211, 238, 0.2) 0%, rgba(139, 92, 246, 0.15) 100%) !important;
-        border: 1.5px solid rgba(34, 211, 238, 0.5) !important;
-        color: #F8FAFC !important;
-        font-weight: 700 !important;
-        box-shadow: 0 0 20px rgba(34, 211, 238, 0.25) !important;
-    }}
+    
     [data-testid="stSidebar"] div.stRadio > div > label > div:first-child {{
         display: none !important;
     }}
+    [data-testid="stSidebar"] div.stRadio input[type="radio"] {{
+        display: none !important;
+    }}
 
-    /* HIGH-CONTRAST Form Controls (Light & Dark Mode Safe) */
-    div[data-baseweb="select"] > div {{
-        background-color: #0B1728 !important;
-        border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    [data-testid="stSidebar"] div.stRadio > div > label {{
+        position: relative !important;
+        overflow: hidden !important;
+        background: var(--fb-sidebar-item-bg) !important;
+        backdrop-filter: blur(16px) saturate(140%) !important;
+        -webkit-backdrop-filter: blur(16px) saturate(140%) !important;
+        padding: 10px 16px !important;
         border-radius: 12px !important;
-        color: #F8FAFC !important;
+        font-size: 0.92rem !important;
+        font-weight: 600 !important;
+        color: var(--fb-sidebar-item-text) !important;
+        transition: all 0.26s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border: 1px solid var(--fb-border-subtle) !important;
+        border-top: 1px solid var(--fb-border-top) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        z-index: 1 !important;
+    }}
+
+    /* Uiverse-Inspired Hover Gradient Sweep Pseudo-Element */
+    [data-testid="stSidebar"] div.stRadio > div > label::before {{
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: -100% !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.18), rgba(139, 92, 246, 0.15), transparent) !important;
+        transition: left 0.45s ease !important;
+        pointer-events: none !important;
+        z-index: -1 !important;
+    }}
+    [data-testid="stSidebar"] div.stRadio > div > label:hover::before {{
+        left: 100% !important;
+    }}
+    [data-testid="stSidebar"] div.stRadio > div > label:hover {{
+        background: rgba(34, 211, 238, 0.14) !important;
+        color: #FFFFFF !important;
+        border-color: rgba(34, 211, 238, 0.5) !important;
+        transform: translateX(3px) !important;
+        box-shadow: 0 6px 20px rgba(34, 211, 238, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+    }}
+
+    /* Active Navigation State with Visible Cyan Glow */
+    [data-testid="stSidebar"] div.stRadio > div > label:has(input:checked) {{
+        background: linear-gradient(135deg, rgba(34, 211, 238, 0.24) 0%, rgba(56, 189, 248, 0.15) 50%, rgba(139, 92, 246, 0.2) 100%) !important;
+        border: 1.5px solid rgba(34, 211, 238, 0.7) !important;
+        border-top: 1.5px solid rgba(255, 255, 255, 0.5) !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        box-shadow: 0 0 24px rgba(34, 211, 238, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+        transform: translateX(2px) !important;
+    }}
+
+    /* HIGH-CONTRAST DARK Form Controls */
+    div[data-baseweb="select"] > div {{
+        background-color: var(--fb-input-bg) !important;
+        border: 1px solid var(--fb-input-border) !important;
+        border-radius: 12px !important;
+        color: var(--fb-input-text) !important;
     }}
     div[data-baseweb="select"] span {{
-        color: #F8FAFC !important;
+        color: var(--fb-input-text) !important;
         font-weight: 500 !important;
     }}
     div[data-baseweb="popover"], div[data-baseweb="menu"], ul[data-baseweb="menu"] {{
-        background-color: #0B1728 !important;
-        border: 1px solid rgba(34, 211, 238, 0.3) !important;
+        background-color: #0A1628 !important;
+        border: 1px solid rgba(34, 211, 238, 0.35) !important;
         border-radius: 12px !important;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.5) !important;
     }}
     li[data-baseweb="menu-item"] {{
         color: #F8FAFC !important;
         font-weight: 500 !important;
     }}
     li[data-baseweb="menu-item"]:hover {{
-        background-color: rgba(34, 211, 238, 0.18) !important;
+        background-color: rgba(34, 211, 238, 0.2) !important;
         color: #22D3EE !important;
     }}
     div[data-baseweb="input"] > div {{
-        background-color: #0B1728 !important;
-        border: 1px solid rgba(255, 255, 255, 0.14) !important;
+        background-color: var(--fb-input-bg) !important;
+        border: 1px solid var(--fb-input-border) !important;
         border-radius: 12px !important;
-        color: #F8FAFC !important;
+        color: var(--fb-input-text) !important;
     }}
     input {{
-        color: #F8FAFC !important;
+        color: var(--fb-input-text) !important;
     }}
     label, [data-testid="stWidgetLabel"] p {{
-        color: {THEME['text_secondary']} !important;
+        color: var(--fb-text-secondary) !important;
         font-size: 0.82rem !important;
         font-weight: 600 !important;
         letter-spacing: 0.02em !important;
     }}
 
-    /* Real Glassmorphism Cards */
+    /* REAL VISIBLE GLASSMORPHISM CARDS */
     .fb-glass-card {{
-        background: {THEME['glass_card']};
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid {THEME['border_subtle']};
-        border-top: 1px solid rgba(255, 255, 255, 0.16);
+        background: var(--fb-glass-card);
+        backdrop-filter: blur(22px) saturate(140%);
+        -webkit-backdrop-filter: blur(22px) saturate(140%);
+        border: 1px solid var(--fb-border-subtle);
+        border-top: 1px solid var(--fb-border-top);
         border-radius: {THEME['card_radius']};
         padding: 22px 26px;
-        box-shadow: {THEME['card_shadow']};
+        box-shadow: var(--fb-card-shadow);
         margin-bottom: 20px;
-        transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
         position: relative;
         z-index: 2;
     }}
     .fb-glass-card:hover {{
-        border-color: rgba(34, 211, 238, 0.25);
-        box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55), 0 0 20px rgba(34, 211, 238, 0.08);
+        border-color: rgba(34, 211, 238, 0.4);
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55), 0 0 25px rgba(34, 211, 238, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
     }}
 
-    /* Floating Flight Search Glass Card (Landing Right Column) */
     .fb-floating-card {{
-        background: {THEME['glass_floating']};
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-top: 1px solid rgba(255, 255, 255, 0.24);
+        background: var(--fb-glass-floating);
+        backdrop-filter: blur(26px) saturate(140%);
+        -webkit-backdrop-filter: blur(26px) saturate(140%);
+        border: 1.5px solid var(--fb-border-subtle);
+        border-top: 1.5px solid var(--fb-border-top);
         border-radius: 24px;
         padding: 24px 26px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 25px rgba(34, 211, 238, 0.08);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(34, 211, 238, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         position: relative;
         z-index: 2;
     }}
 
-    /* KPI Metric Cards */
     .fb-kpi-card {{
-        background: {THEME['glass_card']};
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid {THEME['border_subtle']};
-        border-top: 1px solid rgba(255, 255, 255, 0.14);
+        background: var(--fb-glass-card);
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        border: 1px solid var(--fb-border-subtle);
+        border-top: 1px solid var(--fb-border-top);
         border-radius: 16px;
         padding: 20px 24px;
-        box-shadow: {THEME['card_shadow']};
+        box-shadow: var(--fb-card-shadow);
         height: 100%;
-        transition: transform 0.2s ease, border-color 0.2s ease;
+        transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
         position: relative;
         z-index: 2;
     }}
     .fb-kpi-card:hover {{
-        border-color: rgba(34, 211, 238, 0.3);
+        border-color: rgba(34, 211, 238, 0.4);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 18px rgba(34, 211, 238, 0.18);
         transform: translateY(-2px);
     }}
     .fb-kpi-label {{
@@ -219,22 +272,21 @@ def apply_custom_theme():
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: {THEME['text_secondary']};
+        color: var(--fb-text-secondary);
         margin-bottom: 4px;
     }}
     .fb-kpi-value {{
         font-size: 1.8rem;
         font-weight: 800;
-        color: {THEME['text_primary']};
+        color: var(--fb-text-primary);
         line-height: 1.2;
     }}
     .fb-kpi-sub {{
         font-size: 0.82rem;
-        color: {THEME['text_secondary']};
+        color: var(--fb-text-secondary);
         margin-top: 4px;
     }}
 
-    /* Badges */
     .fb-badge {{
         display: inline-block;
         padding: 4px 10px;
@@ -245,17 +297,17 @@ def apply_custom_theme():
     .fb-badge-good {{
         background-color: {THEME['success_bg']};
         color: {THEME['success']};
-        border: 1px solid rgba(52, 211, 153, 0.3);
+        border: 1px solid rgba(52, 211, 153, 0.35);
     }}
     .fb-badge-typical {{
         background-color: rgba(34, 211, 238, 0.12);
         color: {THEME['primary_cyan']};
-        border: 1px solid rgba(34, 211, 238, 0.3);
+        border: 1px solid rgba(34, 211, 238, 0.35);
     }}
     .fb-badge-violet {{
         background-color: rgba(139, 92, 246, 0.12);
         color: {THEME['secondary_violet']};
-        border: 1px solid rgba(139, 92, 246, 0.3);
+        border: 1px solid rgba(139, 92, 246, 0.35);
     }}
 
     /* Animated Pill CTA Button (✦ Analyze My Trip) */
@@ -263,32 +315,47 @@ def apply_custom_theme():
         background: linear-gradient(135deg, #06B6D4 0%, #3B82F6 50%, #8B5CF6 100%) !important;
         background-size: 200% 200% !important;
         color: #FFFFFF !important;
-        border: 1px solid rgba(255, 255, 255, 0.35) !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important;
         border-radius: 9999px !important;
         padding: 0.75rem 2rem !important;
         font-size: 1rem !important;
         font-weight: 700 !important;
         letter-spacing: 0.02em !important;
-        box-shadow: 0 4px 24px rgba(34, 211, 238, 0.4), 0 0 16px rgba(139, 92, 246, 0.3) !important;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 4px 24px rgba(34, 211, 238, 0.45), 0 0 16px rgba(139, 92, 246, 0.35) !important;
+        transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
         cursor: pointer !important;
         pointer-events: auto !important;
     }}
     div[data-testid="stButton"] > button:hover {{
         transform: translateY(-2px) scale(1.02) !important;
-        box-shadow: 0 8px 32px rgba(34, 211, 238, 0.6), 0 0 28px rgba(139, 92, 246, 0.45) !important;
-        border-color: rgba(255, 255, 255, 0.6) !important;
+        box-shadow: 0 8px 32px rgba(34, 211, 238, 0.65), 0 0 28px rgba(139, 92, 246, 0.5) !important;
+        border-color: rgba(255, 255, 255, 0.7) !important;
     }}
     div[data-testid="stButton"] > button:active {{
         transform: translateY(0px) scale(0.99) !important;
     }}
 
-    /* Insight Box */
+    /* Hero Gradient Shimmer Animation */
+    @keyframes textShimmer {{
+        0% {{ background-position: 0% 50%; }}
+        50% {{ background-position: 100% 50%; }}
+        100% {{ background-position: 0% 50%; }}
+    }}
+    .fb-hero-gradient-text {{
+        background: linear-gradient(135deg, #22D3EE 0%, #38BDF8 40%, #818CF8 70%, #C084FC 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: textShimmer 6s ease-in-out infinite;
+        filter: drop-shadow(0 0 25px rgba(34, 211, 238, 0.45));
+        display: inline-block;
+    }}
+
     .fb-insight-box {{
-        background: {THEME['glass_card']};
-        backdrop-filter: blur(14px);
-        border: 1px solid {THEME['border_subtle']};
+        background: var(--fb-glass-card);
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--fb-border-subtle);
         border-left: 4px solid {THEME['primary_cyan']};
         border-radius: 12px;
         padding: 16px 20px;
@@ -297,39 +364,37 @@ def apply_custom_theme():
     .fb-insight-title {{
         font-weight: 700;
         font-size: 0.96rem;
-        color: {THEME['text_primary']};
+        color: var(--fb-text-primary);
         margin-bottom: 4px;
     }}
     .fb-insight-body {{
         font-size: 0.88rem;
-        color: {THEME['text_secondary']};
+        color: var(--fb-text-secondary);
         line-height: 1.5;
     }}
 
-    /* Flight Recommendation Card */
     .fb-flight-card {{
-        background: {THEME['glass_card']};
-        backdrop-filter: blur(16px);
-        border: 1px solid {THEME['border_subtle']};
-        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        background: var(--fb-glass-card);
+        backdrop-filter: blur(18px);
+        border: 1px solid var(--fb-border-subtle);
+        border-top: 1px solid var(--fb-border-top);
         border-radius: 16px;
         padding: 20px 24px;
         margin-bottom: 14px;
-        box-shadow: {THEME['card_shadow']};
-        transition: transform 0.2s ease, border-color 0.2s ease;
+        box-shadow: var(--fb-card-shadow);
+        transition: transform 0.25s ease, border-color 0.25s ease;
     }}
     .fb-flight-card:hover {{
-        border-color: rgba(34, 211, 238, 0.3);
+        border-color: rgba(34, 211, 238, 0.4);
         transform: translateY(-2px);
     }}
     .fb-flight-price {{
         font-size: 1.6rem;
         font-weight: 800;
         color: {THEME['primary_cyan']};
-        text-shadow: 0 0 14px rgba(34, 211, 238, 0.3);
+        text-shadow: 0 0 14px rgba(34, 211, 238, 0.35);
     }}
 
-    /* Zero-height iframe helper container */
     iframe[title="st.iframe"] {{
         display: none !important;
         height: 0 !important;
@@ -340,7 +405,6 @@ def apply_custom_theme():
     """
     st.markdown(css, unsafe_allow_html=True)
 
-    # Streamlit-compatible parent window DOM injection for Custom Cursor & Background Canvas
     cursor_js = """
     <script>
     (function() {
@@ -349,13 +413,11 @@ def apply_custom_theme():
             const pDoc = window.parent.document;
             if (!pWin || !pDoc) return;
 
-            // Detect touch devices
             const isTouch = ('ontouchstart' in pWin) && pWin.matchMedia && pWin.matchMedia('(hover: none) and (pointer: coarse)').matches;
             const prefersReducedMotion = pWin.matchMedia && pWin.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
             if (isTouch) return;
 
-            // Inject Cursor & Canvas CSS into parent document head
             if (!pDoc.getElementById('fb-cursor-styles')) {
                 const styleEl = pDoc.createElement('style');
                 styleEl.id = 'fb-cursor-styles';
@@ -424,7 +486,6 @@ def apply_custom_theme():
                 pDoc.head.appendChild(styleEl);
             }
 
-            // Create Canvas & Cursor elements on parent body
             let bgCanvas = pDoc.getElementById('fb-bg-canvas');
             if (!bgCanvas) {
                 bgCanvas = pDoc.createElement('canvas');
@@ -453,7 +514,6 @@ def apply_custom_theme():
                 pDoc.body.appendChild(cursorRing);
             }
 
-            // Prevent duplicate initialization on parent window
             if (pWin._fb_cursor_initialized) return;
             pWin._fb_cursor_initialized = true;
 
@@ -478,7 +538,6 @@ def apply_custom_theme():
             pWin.addEventListener('resize', resize);
             resize();
 
-            // Mouse coordinates & lerp
             let mouseX = width / 2;
             let mouseY = height / 2;
             let ringX = width / 2;
@@ -489,7 +548,6 @@ def apply_custom_theme():
             let currentParallaxY = 0;
             let isMouseActive = false;
 
-            // Constellation nodes for background
             const nodeCount = 14;
             const nodes = [];
             for (let i = 0; i < nodeCount; i++) {
@@ -503,7 +561,6 @@ def apply_custom_theme():
                 });
             }
 
-            // Trail particles (5-7 max, 0.5-0.7s fading)
             const trailParticles = [];
             const maxParticles = 7;
 
@@ -534,7 +591,6 @@ def apply_custom_theme():
                 }
             });
 
-            // Hover interactions on parent
             pDoc.addEventListener('mouseover', function(e) {
                 if (!cursorRing) return;
                 const target = e.target;
@@ -550,7 +606,6 @@ def apply_custom_theme():
                 if (cursorRing) cursorRing.style.opacity = '0';
             });
 
-            // Animation Loop
             function animate() {
                 pWin.requestAnimationFrame(animate);
 
@@ -565,7 +620,6 @@ def apply_custom_theme():
                     cursorRing.style.top = ringY + 'px';
                 }
 
-                // Draw background constellation
                 if (bgCtx) {
                     bgCtx.clearRect(0, 0, width, height);
 
@@ -601,7 +655,6 @@ def apply_custom_theme():
                     }
                 }
 
-                // Draw cursor trail
                 if (trailCtx) {
                     trailCtx.clearRect(0, 0, width, height);
                     if (!prefersReducedMotion) {

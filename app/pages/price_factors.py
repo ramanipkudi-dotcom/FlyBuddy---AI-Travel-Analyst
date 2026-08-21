@@ -37,10 +37,10 @@ def render_price_factors_page(df, metrics):
     st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
     fig_imp = plot_feature_importance(top_importances, title="Main Price Factors")
     st.plotly_chart(fig_imp, use_container_width=True)
-    st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px;'><b>What this shows:</b> Flight duration, route distance, and cabin class account for over 70% of total fare variations.</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='font-size: 0.83rem; color: var(--fb-text-secondary, #94A3B8); margin-top: 4px;'><b>What this shows:</b> Flight duration, route distance, and cabin class account for over 70% of total fare variations.</p>", unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown(f"<h3 style='color: {THEME['text_primary']}; font-weight: 700; font-size: 1.2rem;'>Key Price Drivers</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='color: var(--fb-text-primary, #F8FAFC); font-weight: 700; font-size: 1.2rem;'>Key Price Drivers</h3>", unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
     with col1:
@@ -83,9 +83,9 @@ def render_price_factors_page(df, metrics):
             badge_type="typical"
         )
 
-    # Full-Width Properly Sized Heatmap (Option A)
+    # Full-Width Properly Sized Heatmap
     st.markdown('<div class="fb-glass-card" style="margin-top: 16px;">', unsafe_allow_html=True)
-    st.markdown(f"<h4 style='color: {THEME['text_primary']}; font-weight: 700; margin-bottom: 14px; font-size: 1.05rem;'>Typical Fare by Season & Weekday (₹)</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='color: var(--fb-text-primary, #F8FAFC); font-weight: 700; margin-bottom: 14px; font-size: 1.05rem;'>Typical Fare by Season & Weekday (₹)</h4>", unsafe_allow_html=True)
     
     pivot_df = df.pivot_table(index='Weekday', columns='Season', values='Price_clean', aggfunc='median')
     days_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -105,5 +105,5 @@ def render_price_factors_page(df, metrics):
     fig_heat.update_layout(heat_layout)
     fig_heat.update_traces(textfont=dict(size=12, color="#FFFFFF", family="Inter, sans-serif"))
     st.plotly_chart(fig_heat, use_container_width=True)
-    st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px;'><b>What this shows:</b> Seasonal travel demand patterns highlight peak travel periods and mid-week savings opportunities.</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='font-size: 0.83rem; color: var(--fb-text-secondary, #94A3B8); margin-top: 4px;'><b>What this shows:</b> Seasonal travel demand patterns highlight peak travel periods and mid-week savings opportunities.</p>", unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)

@@ -2,8 +2,8 @@
 FlyBuddy - Landing Page
 -----------------------
 Dribbble Reference Composition:
-Spacious hero layout, top navigation, large stacked headline on left,
-subtle stats chip, and clean flight search form card on right.
+Spacious hero layout, top navigation, large stacked headline on left with subtle shimmer,
+subtle stats chip, and visible real-glass flight search form card on right.
 """
 
 import streamlit as st
@@ -28,22 +28,22 @@ def render_landing_page():
     nav_col1, nav_col2 = st.columns([1.5, 2.5])
     with nav_col1:
         st.markdown(
-            f'''<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
-<div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, {THEME['primary_cyan']}, {THEME['secondary_violet']}); display: flex; align-items: center; justify-content: center; color: white; font-size: 19px; font-weight: bold; box-shadow: 0 4px 14px rgba(34, 211, 238, 0.4);">✈</div>
+            f'''<div style="display: flex; align-items: center; gap: 13px; margin-bottom: 22px;">
+<div style="width: 48px; height: 48px; border-radius: 13px; background: linear-gradient(135deg, {THEME['primary_cyan']}, {THEME['secondary_violet']}); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: bold; box-shadow: 0 4px 18px rgba(34, 211, 238, 0.45);">✈</div>
 <div>
-<div style="font-size: 1.3rem; font-weight: 800; color: {THEME['text_primary']}; letter-spacing: -0.02em; line-height: 1.1;">FlyBuddy</div>
-<div style="font-size: 0.68rem; font-weight: 600; color: {THEME['primary_cyan']}; letter-spacing: 0.08em; text-transform: uppercase;">TRAVEL ANALYST</div>
+<div style="font-size: 1.62rem; font-weight: 800; color: #F8FAFC; letter-spacing: -0.025em; line-height: 1.1;">FLYBUDDY</div>
+<div style="font-size: 0.78rem; font-weight: 700; color: {THEME['primary_cyan']}; letter-spacing: 0.09em; text-transform: uppercase; margin-top: 1px;">TRAVEL ANALYST</div>
 </div>
 </div>''',
             unsafe_allow_html=True
         )
     with nav_col2:
         st.markdown(
-            f'''<div style="display: flex; justify-content: flex-end; align-items: center; gap: 20px; padding-top: 6px;">
-<span style="font-size: 0.85rem; color: {THEME['text_secondary']}; font-weight: 500;">Historical Fares</span>
-<span style="font-size: 0.85rem; color: {THEME['text_secondary']}; font-weight: 500;">Price Drivers</span>
-<span style="font-size: 0.85rem; color: {THEME['text_secondary']}; font-weight: 500;">Booking Windows</span>
-<span style="background: rgba(34, 211, 238, 0.15); border: 1px solid rgba(34, 211, 238, 0.3); padding: 4px 12px; border-radius: 9999px; font-size: 0.76rem; font-weight: 700; color: {THEME['primary_cyan']};">100K+ FLIGHTS</span>
+            f'''<div style="display: flex; justify-content: flex-end; align-items: center; gap: 20px; padding-top: 10px;">
+<span style="font-size: 0.88rem; color: #94A3B8; font-weight: 500;">Historical Fares</span>
+<span style="font-size: 0.88rem; color: #94A3B8; font-weight: 500;">Price Drivers</span>
+<span style="font-size: 0.88rem; color: #94A3B8; font-weight: 500;">Booking Windows</span>
+<span style="background: rgba(34, 211, 238, 0.15); border: 1px solid rgba(34, 211, 238, 0.35); padding: 5px 14px; border-radius: 9999px; font-size: 0.78rem; font-weight: 700; color: {THEME['primary_cyan']};">100K+ FLIGHTS</span>
 </div>''',
             unsafe_allow_html=True
         )
@@ -53,18 +53,18 @@ def render_landing_page():
 
     with col_left:
         st.markdown(
-            f'''<div style="padding: 10px 20px 10px 4px;">
-<div style="font-size: 3.8rem; font-weight: 900; color: {THEME['text_primary']}; line-height: 1.08; letter-spacing: -0.035em;">
+            f'''<div style="padding: 6px 20px 10px 4px;">
+<div style="font-size: 3.8rem; font-weight: 900; color: #F8FAFC; line-height: 1.08; letter-spacing: -0.035em;">
 Plan Your<br>
-<span style="color: {THEME['primary_cyan']}; text-shadow: 0 0 35px rgba(34, 211, 238, 0.4);">Smartest</span><br>
+<span class="fb-hero-gradient-text">Smartest</span><br>
 Flight Route.
 </div>
-<p style="font-size: 1.08rem; color: {THEME['text_secondary']}; line-height: 1.6; margin-top: 20px; max-width: 480px;">
+<p style="font-size: 1.08rem; color: #94A3B8; line-height: 1.6; margin-top: 18px; max-width: 480px;">
 Explore historical flight prices across 100,000+ flight records, discover optimal booking windows, and understand what drives your fare.
 </p>
-<div style="margin-top: 24px; display: inline-flex; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 8px 14px;">
+<div style="margin-top: 22px; display: inline-flex; align-items: center; gap: 8px; background: rgba(10, 25, 50, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(120, 210, 255, 0.2); border-radius: 12px; padding: 8px 14px;">
 <span style="color: {THEME['primary_cyan']}; font-size: 0.85rem; font-weight: 700;">100,000+</span>
-<span style="color: {THEME['text_secondary']}; font-size: 0.8rem;">flights analyzed across 18 major routes</span>
+<span style="color: #94A3B8; font-size: 0.8rem;">flights analyzed across 18 major routes</span>
 </div>
 </div>''',
             unsafe_allow_html=True
@@ -72,8 +72,9 @@ Explore historical flight prices across 100,000+ flight records, discover optima
 
     with col_right:
         st.markdown('<div class="fb-floating-card">', unsafe_allow_html=True)
+        st.markdown(f'<div style="font-size: 1.15rem; font-weight: 800; color: #F8FAFC; margin-bottom: 14px; letter-spacing: -0.01em;">Plan Your Route</div>', unsafe_allow_html=True)
         
-        # Row 1: Balanced Origin & Destination
+        # Row 1: Balanced Origin & Destination (Zero broken swap buttons)
         col_from, col_to = st.columns(2)
         with col_from:
             source_city = st.selectbox("Origin", CITIES, key="sel_source_box")

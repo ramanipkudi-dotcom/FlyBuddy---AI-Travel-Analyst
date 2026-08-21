@@ -1,7 +1,7 @@
 """
 FlyBuddy - Content Header Component
 -----------------------------------
-Renders the top bar for each page without excessive top padding.
+Renders the top bar for each page with high contrast Light/Dark mode styling.
 """
 
 import streamlit as st
@@ -17,10 +17,10 @@ def render_header(title, subtitle=None, badge_text=None):
         st.markdown(
             f"""
             <div style="margin-bottom: 14px;">
-                <h1 style="font-size: 1.75rem; font-weight: 800; color: {THEME['text_primary']}; margin: 0; padding: 0; letter-spacing: -0.02em;">
+                <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--fb-text-primary, #F8FAFC); margin: 0; padding: 0; letter-spacing: -0.02em;">
                     {title}
                 </h1>
-                {f'<p style="font-size: 0.92rem; color: {THEME["text_secondary"]}; margin: 4px 0 0 0;">{subtitle}</p>' if subtitle else ''}
+                {f'<p style="font-size: 0.92rem; color: var(--fb-text-secondary, #94A3B8); margin: 4px 0 0 0;">{subtitle}</p>' if subtitle else ''}
             </div>
             """,
             unsafe_allow_html=True

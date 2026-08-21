@@ -1,7 +1,8 @@
 """
 FlyBuddy - Dark Glass Sidebar Component
 ---------------------------------------
-Provides restored FlyBuddy logo, active route glass card, single-click navigation, and About page.
+Provides restored FlyBuddy logo, active route glass card, single-click clean text navigation,
+and About page.
 """
 
 import streamlit as st
@@ -22,19 +23,19 @@ def render_sidebar():
     Render clean dark glass sidebar with restored FlyBuddy logo and 7 travel-focused pages.
     """
     with st.sidebar:
-        # Restored FlyBuddy Logo Header
+        # FlyBuddy Logo Header (Enlarged, prominent, and positioned near top)
         st.markdown(
             f"""
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 22px; padding: 2px 0;">
-                <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, {THEME['primary_cyan']}, {THEME['secondary_violet']}); display: flex; align-items: center; justify-content: center; color: white; font-size: 19px; font-weight: bold; box-shadow: 0 4px 16px rgba(34, 211, 238, 0.4);">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding: 0 0 2px 0;">
+                <div style="width: 42px; height: 42px; border-radius: 11px; background: linear-gradient(135deg, {THEME['primary_cyan']}, {THEME['secondary_violet']}); display: flex; align-items: center; justify-content: center; color: white; font-size: 21px; font-weight: bold; box-shadow: 0 4px 16px rgba(34, 211, 238, 0.45);">
                     ✈
                 </div>
                 <div>
-                    <div style="font-size: 1.35rem; font-weight: 800; color: {THEME['text_primary']}; letter-spacing: -0.02em; line-height: 1.1;">
-                        FlyBuddy
+                    <div style="font-size: 1.45rem; font-weight: 800; color: #F8FAFC; letter-spacing: -0.02em; line-height: 1.1;">
+                        FLYBUDDY
                     </div>
-                    <div style="font-size: 0.72rem; font-weight: 600; color: {THEME['primary_cyan']}; letter-spacing: 0.06em; text-transform: uppercase;">
-                        Travel Analyst
+                    <div style="font-size: 0.72rem; font-weight: 700; color: {THEME['primary_cyan']}; letter-spacing: 0.08em; text-transform: uppercase;">
+                        TRAVEL ANALYST
                     </div>
                 </div>
             </div>
@@ -49,14 +50,14 @@ def render_sidebar():
         if active_route:
             st.markdown(
                 f"""
-                <div style="background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);">
-                    <div style="font-size: 0.68rem; font-weight: 700; color: {THEME['primary_cyan']}; text-transform: uppercase; letter-spacing: 0.05em;">
+                <div style="background: rgba(10, 25, 50, 0.65); backdrop-filter: blur(16px); border: 1px solid rgba(120, 210, 255, 0.22); border-top: 1px solid rgba(255, 255, 255, 0.25); border-radius: 14px; padding: 12px 15px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);">
+                    <div style="font-size: 0.68rem; font-weight: 700; color: {THEME['primary_cyan']}; text-transform: uppercase; letter-spacing: 0.06em;">
                         Active Route
                     </div>
-                    <div style="font-size: 0.95rem; font-weight: 700; color: {THEME['text_primary']}; margin-top: 2px;">
+                    <div style="font-size: 0.96rem; font-weight: 700; color: #F8FAFC; margin-top: 2px;">
                         {active_route}
                     </div>
-                    <div style="font-size: 0.76rem; color: {THEME['text_secondary']}; margin-top: 1px;">
+                    <div style="font-size: 0.78rem; color: #94A3B8; margin-top: 1px;">
                         Class: {active_class}
                     </div>
                 </div>
@@ -66,7 +67,7 @@ def render_sidebar():
 
         # Navigation Label
         st.markdown(
-            f"<div style='font-size: 0.7rem; font-weight: 700; color: {THEME['text_secondary']}; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;'>Navigation</div>",
+            f"<div style='font-size: 0.7rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;'>Navigation</div>",
             unsafe_allow_html=True
         )
 
@@ -77,6 +78,7 @@ def render_sidebar():
         def on_nav_change():
             st.session_state['current_page'] = st.session_state['nav_radio_selection']
 
+        # Clean text navigation items (Zero emojis/symbols)
         selected_page = st.radio(
             label="Navigation Menu",
             options=NAV_ITEMS,
@@ -99,8 +101,8 @@ def render_sidebar():
         # Tagline Footer
         st.markdown(
             f"""
-            <div style="margin-top: 28px; padding-top: 14px; border-top: 1px solid {THEME['border_subtle']};">
-                <div style="font-size: 0.78rem; color: {THEME['text_secondary']};">
+            <div style="margin-top: 24px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+                <div style="font-size: 0.78rem; color: #94A3B8;">
                     "Travel smarter, not harder."
                 </div>
             </div>
