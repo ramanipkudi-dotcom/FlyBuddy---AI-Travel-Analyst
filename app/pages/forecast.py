@@ -2,7 +2,7 @@
 FlyBuddy - Flight Price Forecast Page
 -------------------------------------
 Completed data-driven fare estimation powered by trained model inference,
-advance-days fare trend curves, and seasonal outlook.
+advance-days fare trend curves, and seasonal outlook. Fully reactive to all input changes.
 """
 
 import streamlit as st
@@ -17,7 +17,6 @@ from app.components.charts import get_base_layout
 def render_forecast_page(df, model_pipeline, metrics):
     source = st.session_state.get('active_source', 'Chennai')
     dest = st.session_state.get('active_dest', 'Mumbai')
-    travel_class = st.session_state.get('active_class', 'Economy')
     
     render_header(
         title="Price Forecast & Estimated Fare",
@@ -26,7 +25,7 @@ def render_forecast_page(df, model_pipeline, metrics):
     )
 
     st.markdown('<div class="fb-hero-card">', unsafe_allow_html=True)
-    st.markdown(f"<div style='font-size: 0.78rem; font-weight: 700; color: {THEME['primary_cyan']}; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;'>Fare Estimate Calculator</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='font-size: 0.78rem; font-weight: 700; color: {THEME['primary_cyan']}; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;'>Fare Estimate Calculator ({source} → {dest})</div>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
     
@@ -92,7 +91,7 @@ def render_forecast_page(df, model_pipeline, metrics):
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Prediction Display Cards
+    # Dynamic Prediction Display Cards
     if estimated_fare:
         k1, k2, k3 = st.columns(3)
         with k1:
@@ -170,14 +169,14 @@ def render_forecast_page(df, model_pipeline, metrics):
     with col_o1:
         render_insight_card(
             title="What this means for your trip",
-            explanation=f"At <b>{days_lead} days before departure</b>, this itinerary is priced around <b>₹{estimated_fare:,.0f}</b>. Booking within the 22–35 day window typically captures the most competitive airline inventory.",
+            explanation=f"At <b>{days_lead} days before departure</b>, this itinerary is estimated around <b>₹{estimated_fare:,.0f}</b> ({sel_airline}, {sel_class}). Fares for this configuration historically escalate within 10 days of departure.",
             badge_text="Booking Guidance",
             badge_type="good"
         )
     with col_o2:
         render_insight_card(
             title="Seasonal Price Outlook",
-            explanation="Prices for this route experience moderate seasonal adjustments during peak holiday periods. Forward-looking seasonal time-series models will further enhance future projections.",
+            explanation=f"Prices for this route in <b>{sel_season}</b> reflect seasonal travel volume. Booking in advance captures favorable inventory tiers before price escalations.",
             badge_text="Seasonal Trend",
             badge_type="violet"
         )

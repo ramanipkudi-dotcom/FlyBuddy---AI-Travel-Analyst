@@ -3,7 +3,7 @@ FlyBuddy - Landing Page
 -----------------------
 Dribbble Reference Composition:
 Spacious hero layout, top navigation, large stacked headline on left,
-subtle stats chip, and floating glassmorphic flight search card on right.
+subtle stats chip, and clean flight search form card on right.
 """
 
 import streamlit as st
@@ -73,7 +73,7 @@ Explore historical flight prices across 100,000+ flight records, discover optima
     with col_right:
         st.markdown('<div class="fb-floating-card">', unsafe_allow_html=True)
         
-        # Row 1: Balanced Origin & Destination (No Swap button, perfect alignment)
+        # Row 1: Balanced Origin & Destination
         col_from, col_to = st.columns(2)
         with col_from:
             source_city = st.selectbox("Origin", CITIES, key="sel_source_box")
@@ -91,7 +91,7 @@ Explore historical flight prices across 100,000+ flight records, discover optima
 
         st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
 
-        # Row 3: Primary Animated CTA Button
+        # Row 3: Primary Animated CTA Button (Single Click)
         if st.button("✦ Analyze My Trip", use_container_width=True):
             if source_city == dest_city:
                 st.warning("Origin and Destination cannot be the same. Please choose different cities.")
@@ -104,6 +104,8 @@ Explore historical flight prices across 100,000+ flight records, discover optima
                 st.session_state['active_date'] = str(travel_date)
                 st.session_state['has_searched'] = True
                 st.session_state['show_loading'] = True
+                st.session_state['current_page'] = 'Overview'
+                st.session_state['nav_radio_selection'] = 'Overview'
                 st.rerun()
 
         st.markdown('</div>', unsafe_allow_html=True)

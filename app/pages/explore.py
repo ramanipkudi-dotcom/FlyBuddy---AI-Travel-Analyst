@@ -1,7 +1,7 @@
 """
 FlyBuddy - Price Explorer Page
 ------------------------------
-Interactive multi-attribute data exploration tool with real-time filtering and graph interpretations.
+Interactive multi-attribute data exploration tool with real-time single-click filtering and reset.
 """
 
 import streamlit as st
@@ -10,9 +10,8 @@ from app.components.theme import THEME
 from app.components.header import render_header
 from app.components.charts import (
     plot_price_distribution, plot_airline_prices, plot_travel_class_prices,
-    plot_stops_vs_price, plot_lead_time_curve, get_base_layout
+    plot_stops_vs_price, plot_lead_time_curve
 )
-import plotly.express as px
 
 def render_explore_page(df):
     render_header(
@@ -20,6 +19,21 @@ def render_explore_page(df):
         subtitle="Explore flight prices across routes, airlines, cabin classes, and booking conditions.",
         badge_text="Exploration Tool"
     )
+
+    # Initialize keys if missing
+    for k in ['exp_src', 'exp_dst', 'exp_air', 'exp_cls', 'exp_sea', 'exp_stp', 'exp_chn']:
+        if k not in st.session_state:
+            st.session_state[k] = 'All'
+
+    # Single-Click Reset Callback
+    def reset_explore_filters():
+        st.session_state['exp_src'] = 'All'
+        st.session_state['exp_dst'] = 'All'
+        st.session_state['exp_air'] = 'All'
+        st.session_state['exp_cls'] = 'All'
+        st.session_state['exp_sea'] = 'All'
+        st.session_state['exp_stp'] = 'All'
+        st.session_state['exp_chn'] = 'All'
 
     with st.container():
         st.markdown('<div class="fb-glass-card" style="padding: 18px 22px;">', unsafe_allow_html=True)
@@ -33,13 +47,13 @@ def render_explore_page(df):
         classes = ['All'] + sorted([str(x) for x in df['Travel_Class'].dropna().unique()])
 
         with col1:
-            selected_source = st.selectbox("Origin", sources, index=0)
+            selected_source = st.selectbox("Origin", sources, key="exp_src")
         with col2:
-            selected_dest = st.selectbox("Destination", dests, index=0)
+            selected_dest = st.selectbox("Destination", dests, key="exp_dst")
         with col3:
-            selected_airline = st.selectbox("Airline", airlines, index=0)
+            selected_airline = st.selectbox("Airline", airlines, key="exp_air")
         with col4:
-            selected_class = st.selectbox("Travel Class", classes, index=0)
+            selected_class = st.selectbox("Travel Class", classes, key="exp_cls")
 
         col5, col6, col7, col8 = st.columns(4)
         seasons = ['All'] + sorted([str(x) for x in df['Season'].dropna().unique()])
@@ -47,15 +61,14 @@ def render_explore_page(df):
         channels = ['All'] + sorted([str(x) for x in df['Booking_Channel'].dropna().unique()])
 
         with col5:
-            selected_season = st.selectbox("Season", seasons, index=0)
+            selected_season = st.selectbox("Season", seasons, key="exp_sea")
         with col6:
-            selected_stop = st.selectbox("Stops", stops, index=0)
+            selected_stop = st.selectbox("Stops", stops, key="exp_stp")
         with col7:
-            selected_channel = st.selectbox("Booking Channel", channels, index=0)
+            selected_channel = st.selectbox("Booking Channel", channels, key="exp_chn")
         with col8:
             st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
-            if st.button("Reset Filters", use_container_width=True):
-                st.rerun()
+            st.button("Reset Filters", use_container_width=True, on_click=reset_explore_filters)
 
         st.markdown('</div>', unsafe_allow_html=True)
 

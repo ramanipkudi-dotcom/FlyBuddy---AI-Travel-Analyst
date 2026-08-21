@@ -23,6 +23,7 @@ from app.pages.price_factors import render_price_factors_page
 from app.pages.booking_time import render_booking_time_page
 from app.pages.forecast import render_forecast_page
 from app.pages.recommendations import render_recommendations_page
+from app.pages.about import render_about_page
 
 # Core Data Preprocessing
 from src.preprocessing import clean_flight_dataframe
@@ -124,6 +125,8 @@ def main():
         render_forecast_page(df, model_pipeline, metrics)
     elif selected_page == 'Recommendations':
         render_recommendations_page(df)
+    elif selected_page == 'About':
+        render_about_page()
     else:
         render_overview_page(df, model_pipeline, metrics)
 

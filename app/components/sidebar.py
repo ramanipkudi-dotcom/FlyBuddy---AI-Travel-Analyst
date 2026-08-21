@@ -1,7 +1,7 @@
 """
 FlyBuddy - Dark Glass Sidebar Component
 ---------------------------------------
-Provides restored FlyBuddy logo, active route glass card, and clean 6-page navigation.
+Provides restored FlyBuddy logo, active route glass card, single-click navigation, and About page.
 """
 
 import streamlit as st
@@ -13,18 +13,19 @@ NAV_ITEMS = [
     "Price Factors",
     "Best Time to Book",
     "Price Forecast",
-    "Recommendations"
+    "Recommendations",
+    "About"
 ]
 
 def render_sidebar():
     """
-    Render clean dark glass sidebar with restored FlyBuddy logo and 6 travel-focused pages.
+    Render clean dark glass sidebar with restored FlyBuddy logo and 7 travel-focused pages.
     """
     with st.sidebar:
         # Restored FlyBuddy Logo Header
         st.markdown(
             f"""
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding: 2px 0;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 22px; padding: 2px 0;">
                 <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, {THEME['primary_cyan']}, {THEME['secondary_violet']}); display: flex; align-items: center; justify-content: center; color: white; font-size: 19px; font-weight: bold; box-shadow: 0 4px 16px rgba(34, 211, 238, 0.4);">
                     ✈
                 </div>
@@ -48,7 +49,7 @@ def render_sidebar():
         if active_route:
             st.markdown(
                 f"""
-                <div style="background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 12px; padding: 12px 14px; margin-bottom: 20px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);">
+                <div style="background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);">
                     <div style="font-size: 0.68rem; font-weight: 700; color: {THEME['primary_cyan']}; text-transform: uppercase; letter-spacing: 0.05em;">
                         Active Route
                     </div>
@@ -65,36 +66,40 @@ def render_sidebar():
 
         # Navigation Label
         st.markdown(
-            f"<div style='font-size: 0.7rem; font-weight: 700; color: {THEME['text_secondary']}; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;'>Navigation</div>",
+            f"<div style='font-size: 0.7rem; font-weight: 700; color: {THEME['text_secondary']}; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;'>Navigation</div>",
             unsafe_allow_html=True
         )
 
-        current_page = st.session_state.get('current_page', 'Overview')
-        if current_page not in NAV_ITEMS:
-            current_page = 'Overview'
+        # Single-Click Navigation Sync Callback
+        if 'nav_radio_selection' not in st.session_state:
+            st.session_state['nav_radio_selection'] = st.session_state.get('current_page', 'Overview')
 
-        current_idx = NAV_ITEMS.index(current_page) if current_page in NAV_ITEMS else 0
+        def on_nav_change():
+            st.session_state['current_page'] = st.session_state['nav_radio_selection']
 
         selected_page = st.radio(
             label="Navigation Menu",
             options=NAV_ITEMS,
-            index=current_idx,
-            label_visibility="collapsed"
+            label_visibility="collapsed",
+            key="nav_radio_selection",
+            on_change=on_nav_change
         )
 
         st.session_state['current_page'] = selected_page
 
-        # Quick Action: Change Trip
+        # Quick Action: Change Trip (Single Click)
         st.markdown("<div style='margin-top: 18px;'></div>", unsafe_allow_html=True)
-        if st.button("Change Trip", use_container_width=True):
+        def reset_to_landing():
             st.session_state['has_searched'] = False
             st.session_state['current_page'] = 'Overview'
-            st.rerun()
+            st.session_state['nav_radio_selection'] = 'Overview'
+
+        st.button("Change Trip", use_container_width=True, on_click=reset_to_landing)
 
         # Tagline Footer
         st.markdown(
             f"""
-            <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid {THEME['border_subtle']};">
+            <div style="margin-top: 28px; padding-top: 14px; border-top: 1px solid {THEME['border_subtle']};">
                 <div style="font-size: 0.78rem; color: {THEME['text_secondary']};">
                     "Travel smarter, not harder."
                 </div>
