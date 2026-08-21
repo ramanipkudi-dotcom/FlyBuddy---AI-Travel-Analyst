@@ -41,7 +41,8 @@ def render_overview_page(df, model_pipeline, metrics):
     flights_count = len(route_df)
 
     lead_stats = calculate_booking_lead_time_stats(df, source=source, destination=dest, travel_class=travel_class)
-    best_window = lead_stats['cheapest_window'] if lead_stats else "22–35 days before departure"
+    best_window = lead_stats['cheapest_window'] if lead_stats else "Advance (22–35d)"
+    savings_pct = lead_stats['potential_savings_pct'] if lead_stats else 15.0
 
     # 1. KPI Summary Cards
     kpi_col1, kpi_col2, kpi_col3, kpi_col4 = st.columns(4)
@@ -51,7 +52,7 @@ def render_overview_page(df, model_pipeline, metrics):
     with kpi_col2:
         render_kpi_card("Lowest Historical Fare", f"₹{min_price:,.0f}", "Best observed deal")
     with kpi_col3:
-        render_kpi_card("Best Booking Window", best_window, "Historically favorable")
+        render_kpi_card("Best Booking Window", best_window, f"~{savings_pct}% lower historical fares")
     with kpi_col4:
         render_kpi_card("Flights Analyzed", f"{flights_count:,}", f"Route: {source} - {dest}")
 
@@ -65,14 +66,14 @@ def render_overview_page(df, model_pipeline, metrics):
         st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
         fig_dist = plot_price_distribution(route_df, title="1. Historical Fare Distribution")
         st.plotly_chart(fig_dist, use_container_width=True)
-        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Most flights on this route fall within the lower fare range, while a small number of unusually expensive peak fares increase the overall average.</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Most flights on this route fall within the lower fare range, while a small number of peak fares increase the overall average.</p>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with chart_col2:
         st.markdown('<div class="fb-glass-card">', unsafe_allow_html=True)
         fig_lead = plot_lead_time_curve(route_df, title="2. Booking Window vs. Fare")
         st.plotly_chart(fig_lead, use_container_width=True)
-        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Fares are generally more favorable when booked 22–35 days in advance and increase sharply in the final 7–10 days before departure.</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='font-size: 0.83rem; color: {THEME['text_secondary']}; margin-top: 4px; line-height: 1.4;'><b>What this shows:</b> Fares are generally more favorable when booked in advance ({best_window}) and increase sharply in the final days before departure.</p>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     # Secondary Visualizations
@@ -99,8 +100,6 @@ def render_overview_page(df, model_pipeline, metrics):
 
     # 3. Key Insights (Concise, Simple)
     st.markdown(f"<h3 style='color: {THEME['text_primary']}; font-weight: 700; font-size: 1.2rem; margin-top: 10px;'>Key Insights</h3>", unsafe_allow_html=True)
-    
-    savings_pct = lead_stats['potential_savings_pct'] if lead_stats else 15.0
 
     render_insight_card(
         title="Booking timing makes a measurable difference",

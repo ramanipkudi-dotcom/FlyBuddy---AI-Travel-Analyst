@@ -90,7 +90,7 @@ def render_booking_time_page(df):
     with col_w1:
         render_insight_card(
             title="Why are fares lower in this window?",
-            explanation="Airlines balance seat fill rates with revenue goals around 22–35 days before departure, offering competitive inventory before raising prices on the remaining seats.",
+            explanation=f"Airlines balance seat fill rates with revenue management during the <b>{cheapest_window}</b> window, offering competitive inventory before raising prices on remaining seats.",
             badge_text="Booking Behavior",
             badge_type="good"
         )

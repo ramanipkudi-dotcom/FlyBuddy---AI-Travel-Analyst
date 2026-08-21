@@ -1,7 +1,7 @@
 """
 FlyBuddy - Travel Analyst
 =========================
-Master Streamlit application entry point and router with dark glassmorphism theme.
+Master Streamlit application entry point and router with clean state transitions.
 """
 
 import os
@@ -96,16 +96,17 @@ def main():
     df_raw, df = load_datasets()
     model_pipeline, metrics = load_model_artifacts()
 
-    # Step 1: Landing Page ("Plan your next flight smarter.")
+    # Step 1: Landing Page
     if not st.session_state['has_searched']:
         render_landing_page()
         return
 
-    # Step 2: Stepped Loading Screen (Intentional, smooth transition)
+    # Step 2: Stepped Loading Screen (Intentional, clean transition)
     if st.session_state.get('show_loading', False):
         render_analysis_loading(st.session_state['active_source'], st.session_state['active_dest'])
         st.session_state['show_loading'] = False
         st.rerun()
+        return
 
     # Step 3: Main Dashboard with Persistent Left Sidebar
     selected_page = render_sidebar()

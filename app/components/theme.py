@@ -2,49 +2,49 @@
 FlyBuddy - Premium Real Glassmorphism Design System
 ---------------------------------------------------
 Provides color tokens, atmospheric aviation gradients, real glassmorphism styling,
-high-contrast inputs, and Dribbble-inspired frame layout.
+high-contrast inputs, distinct sidebar styling, and clean Streamlit overrides.
 """
 
 import streamlit as st
 
 THEME = {
-    'bg_deep': '#050C18',
-    'bg_surface': '#0A1628',
-    'sidebar_bg': '#07101E',
-    'glass_card': 'rgba(10, 22, 40, 0.72)',
-    'glass_floating': 'linear-gradient(145deg, rgba(12, 24, 44, 0.88) 0%, rgba(18, 34, 60, 0.72) 100%)',
+    'bg_deep': '#040912',
+    'bg_surface': '#0A172B',
+    'sidebar_bg': '#0B192C',
+    'glass_card': 'rgba(12, 24, 46, 0.72)',
+    'glass_floating': 'linear-gradient(145deg, rgba(14, 28, 52, 0.88) 0%, rgba(20, 38, 68, 0.72) 100%)',
     'primary_cyan': '#22D3EE',
     'secondary_violet': '#8B5CF6',
     'accent_blue': '#38BDF8',
     'text_primary': '#F8FAFC',
     'text_secondary': '#94A3B8',
     'text_muted': '#64748B',
-    'border_subtle': 'rgba(255, 255, 255, 0.1)',
+    'border_subtle': 'rgba(255, 255, 255, 0.08)',
     'border_cyan': 'rgba(34, 211, 238, 0.3)',
     'success': '#34D399',
     'success_bg': 'rgba(52, 211, 153, 0.14)',
     'warning': '#FBBF24',
     'warning_bg': 'rgba(251, 191, 36, 0.14)',
     'card_radius': '20px',
-    'card_shadow': '0 16px 40px rgba(0, 0, 0, 0.5)'
+    'card_shadow': '0 16px 40px rgba(0, 0, 0, 0.55)'
 }
 
 def apply_custom_theme():
     """
-    Inject clean, real glassmorphism CSS, high-contrast input styles, and top padding fix.
+    Inject clean, real glassmorphism CSS, high-contrast input styles, distinct sidebar, and top padding fix.
     """
     css = f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-    /* Global Aviation Dark Canvas with Atmospheric Lighting */
+    /* Global Dark Aviation Canvas */
     html, body, [class*="css"], .stApp {{
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         background-color: {THEME['bg_deep']} !important;
         background-image: 
-            radial-gradient(circle at 10% 15%, rgba(34, 211, 238, 0.12) 0%, transparent 45%),
-            radial-gradient(circle at 85% 75%, rgba(139, 92, 246, 0.13) 0%, transparent 45%),
-            radial-gradient(circle at 50% 50%, rgba(10, 22, 40, 0.6) 0%, transparent 100%) !important;
+            radial-gradient(circle at 14% 16%, rgba(34, 211, 238, 0.11) 0%, transparent 45%),
+            radial-gradient(circle at 86% 84%, rgba(139, 92, 246, 0.12) 0%, transparent 45%),
+            radial-gradient(circle at 50% 50%, rgba(10, 23, 43, 0.55) 0%, transparent 100%) !important;
         background-attachment: fixed !important;
         color: {THEME['text_primary']} !important;
     }}
@@ -68,38 +68,11 @@ def apply_custom_theme():
         max-width: 1260px !important;
     }}
 
-    /* Dribbble-Inspired Large Rounded Outer Frame */
-    .fb-hero-frame {{
-        background: linear-gradient(150deg, rgba(10, 22, 40, 0.85) 0%, rgba(6, 14, 26, 0.95) 100%);
-        backdrop-filter: blur(28px);
-        -webkit-backdrop-filter: blur(28px);
-        border: 1.5px solid rgba(255, 255, 255, 0.16);
-        border-top: 1.5px solid rgba(255, 255, 255, 0.28);
-        border-radius: 36px;
-        padding: 32px 38px 36px 38px;
-        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-        margin-bottom: 24px;
-        position: relative;
-        overflow: hidden;
-    }}
-
-    /* Floating Flight Search Glass Card (Right Column) */
-    .fb-floating-card {{
-        background: {THEME['glass_floating']};
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-top: 1px solid rgba(255, 255, 255, 0.24);
-        border-radius: 24px;
-        padding: 24px 26px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 25px rgba(34, 211, 238, 0.08);
-    }}
-
-    /* Distinct Sidebar Background */
+    /* DISTINCT SIDEBAR SURFACE */
     [data-testid="stSidebar"] {{
-        background: linear-gradient(180deg, #091322 0%, #040913 100%) !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-        box-shadow: 6px 0 28px rgba(0, 0, 0, 0.5) !important;
+        background: linear-gradient(180deg, #0B192C 0%, #050E1B 100%) !important;
+        border-right: 1.5px solid rgba(34, 211, 238, 0.16) !important;
+        box-shadow: 10px 0 35px rgba(0, 0, 0, 0.6) !important;
     }}
     [data-testid="stSidebar"] > div:first-child {{
         padding-top: 1.25rem !important;
@@ -107,26 +80,35 @@ def apply_custom_theme():
         padding-right: 1.2rem !important;
     }}
 
-    /* Sidebar Navigation Items with Animated Glass Hover */
+    /* IMPROVED SIDEBAR BUTTONS */
     [data-testid="stSidebar"] div.stRadio > div {{
-        gap: 5px !important;
+        gap: 8px !important;
     }}
     [data-testid="stSidebar"] div.stRadio > div > label {{
-        background: rgba(15, 23, 42, 0.4) !important;
-        backdrop-filter: blur(8px) !important;
-        padding: 9px 14px !important;
-        border-radius: 12px !important;
-        font-size: 0.9rem !important;
-        font-weight: 500 !important;
+        background: rgba(15, 26, 46, 0.6) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        padding: 10px 15px !important;
+        border-radius: 14px !important;
+        font-size: 0.92rem !important;
+        font-weight: 600 !important;
         color: {THEME['text_secondary']} !important;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        border: 1px solid rgba(255, 255, 255, 0.04) !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.06) !important;
     }}
     [data-testid="stSidebar"] div.stRadio > div > label:hover {{
-        background: rgba(34, 211, 238, 0.1) !important;
+        background: rgba(34, 211, 238, 0.12) !important;
         color: {THEME['primary_cyan']} !important;
-        border-color: rgba(34, 211, 238, 0.25) !important;
+        border-color: rgba(34, 211, 238, 0.35) !important;
         transform: translateX(3px) !important;
+        box-shadow: 0 4px 15px rgba(34, 211, 238, 0.1) !important;
+    }}
+    [data-testid="stSidebar"] div.stRadio > div > label:has(input:checked) {{
+        background: linear-gradient(135deg, rgba(34, 211, 238, 0.2) 0%, rgba(139, 92, 246, 0.15) 100%) !important;
+        border: 1.5px solid rgba(34, 211, 238, 0.5) !important;
+        color: #F8FAFC !important;
+        font-weight: 700 !important;
+        box-shadow: 0 0 20px rgba(34, 211, 238, 0.25) !important;
     }}
     [data-testid="stSidebar"] div.stRadio > div > label > div:first-child {{
         display: none !important;
@@ -188,6 +170,18 @@ def apply_custom_theme():
     .fb-glass-card:hover {{
         border-color: rgba(34, 211, 238, 0.25);
         box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55), 0 0 20px rgba(34, 211, 238, 0.08);
+    }}
+
+    /* Floating Flight Search Glass Card (Landing Right Column) */
+    .fb-floating-card {{
+        background: {THEME['glass_floating']};
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-top: 1px solid rgba(255, 255, 255, 0.24);
+        border-radius: 24px;
+        padding: 24px 26px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 25px rgba(34, 211, 238, 0.08);
     }}
 
     /* KPI Metric Cards */
